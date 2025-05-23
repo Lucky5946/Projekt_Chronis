@@ -1,0 +1,13 @@
+@import "tailwindcss";
+
+@theme {
+    --color-primary: #00AEEF;
+    --color-tlacitko_tmave: #023E8A;
+    --color-tlacitko_svetle: #0096C7;
+    --color-pozadi: #E4F3FD;
+    --color-system_modra_svtetlejsi: #4B8FFF;
+    --color-system_modra_tmavsi: #0047B3;
+    --color-system_cervena_tmavsi: #B30000;
+    --color-system_cervena_svetlejsi :#FC5C5C;
+    --color-seda: #333333;
+}
