@@ -9,4 +9,12 @@ export default defineConfig({
     tailwindcss(),
     react()
   ],
+    test: {
+    globals: true,
+    environment: 'jsdom', // ✅ important for React Testing Library
+    setupFiles: './src/setupTests', // ✅ this will load before every test
+    coverage: {
+      reporter: ['text', 'json', 'html']
+    }
+  }
 })
