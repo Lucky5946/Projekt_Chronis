@@ -1,0 +1,1454 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Chronis — Uživatelská a administrátorská příručka</title>
+  <style>
+    /* ─── Proměnné barev projektu ─── */
+    :root {
+      --primary:      #00AEEF;
+      --dark-navy:    #023E8A;
+      --mid-blue:     #0096C7;
+      --light-bg:     #E4F3FD;
+      --blue-light:   #4B8FFF;
+      --blue-dark:    #0047B3;
+      --red-dark:     #B30000;
+      --red-light:    #FC5C5C;
+      --gray:         #333333;
+      --text:         #1a2535;
+      --text-muted:   #4a5a6e;
+      --border:       #c5dff0;
+      --white:        #ffffff;
+    }
+
+    /* ─── Print / PDF nastavení ─── */
+    @page {
+      size: A4;
+      margin: 15mm 14mm 18mm;
+    }
+
+    @page :first {
+      margin: 0;
+    }
+
+    /* ─── Reset & základní styl ─── */
+    *, *::before, *::after { box-sizing: border-box; }
+
+    html {
+      font-family: "Segoe UI", Arial, sans-serif;
+      font-size: 13.5px;
+      line-height: 1.6;
+      color: var(--text);
+      background: #f0f6fc;
+    }
+
+    body { margin: 0; background: #f0f6fc; }
+
+    @media print {
+      html, body { background: var(--white); }
+    }
+
+    /* ─── Obálka dokumentu ─── */
+    .doc-wrap {
+      max-width: 900px;
+      margin: 28px auto;
+      background: var(--white);
+      border-radius: 12px;
+      box-shadow: 0 20px 60px rgba(0,70,180,.10);
+      overflow: hidden;
+    }
+
+    @media print {
+      .doc-wrap {
+        max-width: none;
+        margin: 0;
+        border-radius: 0;
+        box-shadow: none;
+      }
+    }
+
+    /* ══════════════════════════════════════
+       TITULNÍ STRANA
+    ══════════════════════════════════════ */
+    .cover {
+      background: linear-gradient(145deg, var(--dark-navy) 0%, var(--blue-dark) 45%, var(--mid-blue) 80%, var(--primary) 100%);
+      color: var(--white);
+      padding: 72px 62px 60px;
+      min-height: 297mm;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      page-break-after: always;
+    }
+
+    .cover-logo {
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      opacity: .7;
+    }
+
+    .cover-center { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 40px 0 20px; }
+
+    .cover-eyebrow {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      opacity: .6;
+      margin-bottom: 18px;
+    }
+
+    .cover-title {
+      font-size: 54px;
+      font-weight: 900;
+      line-height: 1.05;
+      margin: 0 0 16px;
+      letter-spacing: -.5px;
+    }
+
+    .cover-subtitle {
+      font-size: 20px;
+      font-weight: 400;
+      opacity: .75;
+      margin: 0 0 40px;
+    }
+
+    .cover-divider {
+      width: 64px;
+      height: 4px;
+      background: var(--primary);
+      border-radius: 2px;
+      margin-bottom: 36px;
+    }
+
+    .cover-desc {
+      font-size: 14.5px;
+      opacity: .8;
+      max-width: 480px;
+      line-height: 1.65;
+    }
+
+    .cover-badges { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 32px; }
+
+    .cover-badge {
+      padding: 6px 16px;
+      border: 1.5px solid rgba(255,255,255,.35);
+      border-radius: 100px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .06em;
+    }
+
+    .cover-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      opacity: .55;
+      font-size: 12px;
+      font-weight: 600;
+      border-top: 1px solid rgba(255,255,255,.15);
+      padding-top: 22px;
+    }
+
+    /* ══════════════════════════════════════
+       OBSAH
+    ══════════════════════════════════════ */
+    .toc-page {
+      padding: 52px 62px;
+      page-break-after: always;
+    }
+
+    .toc-heading {
+      font-size: 28px;
+      font-weight: 900;
+      color: var(--dark-navy);
+      margin: 0 0 28px;
+      padding-bottom: 14px;
+      border-bottom: 3px solid var(--primary);
+    }
+
+    .toc-list { list-style: none; margin: 0; padding: 0; }
+
+    .toc-section {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      padding: 9px 0;
+      border-bottom: 1px solid #e8f2fb;
+    }
+
+    .toc-num {
+      min-width: 28px;
+      font-weight: 800;
+      color: var(--primary);
+      font-size: 13px;
+    }
+
+    .toc-text {
+      flex: 1;
+      font-weight: 700;
+      color: var(--dark-navy);
+      font-size: 14px;
+    }
+
+    .toc-sub { list-style: none; margin: 4px 0 0 38px; padding: 0; }
+
+    .toc-sub li {
+      display: flex;
+      gap: 8px;
+      padding: 4px 0;
+      font-size: 12.5px;
+      color: var(--text-muted);
+    }
+
+    .toc-sub-num { min-width: 32px; color: var(--mid-blue); font-weight: 700; }
+
+    .toc-role-chip {
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      padding: 2px 9px;
+      border-radius: 100px;
+      margin-left: auto;
+    }
+
+    .chip-all  { background: #e0f7e0; color: #1a6b1a; }
+    .chip-emp  { background: var(--light-bg); color: var(--blue-dark); }
+    .chip-mgr  { background: #fff3e0; color: #8c5000; }
+    .chip-adm  { background: #fce4ec; color: #8b0000; }
+
+    /* ══════════════════════════════════════
+       STRÁNKA S OBSAHEM
+    ══════════════════════════════════════ */
+    .content-page {
+      padding: 52px 62px;
+    }
+
+    .section-break { page-break-before: always; }
+
+    /* Záhlaví sekce */
+    .section-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 18px;
+      margin-bottom: 28px;
+      padding-bottom: 18px;
+      border-bottom: 3px solid var(--primary);
+    }
+
+    .section-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      flex-shrink: 0;
+    }
+
+    .icon-all  { background: linear-gradient(135deg, var(--primary), var(--mid-blue)); }
+    .icon-emp  { background: linear-gradient(135deg, #0096C7, #00AEEF); }
+    .icon-mgr  { background: linear-gradient(135deg, #FF8C00, #FFB347); }
+    .icon-adm  { background: linear-gradient(135deg, var(--dark-navy), var(--blue-dark)); }
+    .icon-tech { background: linear-gradient(135deg, #2d5a27, #4a8f3f); }
+
+    .section-header-text { flex: 1; }
+
+    .section-num {
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--primary);
+      margin-bottom: 4px;
+    }
+
+    .section-title {
+      font-size: 26px;
+      font-weight: 900;
+      color: var(--dark-navy);
+      margin: 0 0 6px;
+      line-height: 1.15;
+    }
+
+    .section-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin: 0;
+    }
+
+    .role-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 12px;
+      border-radius: 100px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+
+    .badge-all  { background: #e0f7e0; color: #1a6b1a; }
+    .badge-emp  { background: var(--light-bg); color: var(--blue-dark); }
+    .badge-mgr  { background: #fff3e0; color: #8c5000; }
+    .badge-adm  { background: #fce4ec; color: #8b0000; }
+
+    /* Podnadpisy */
+    h2 {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--dark-navy);
+      margin: 32px 0 12px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid var(--light-bg);
+      break-after: avoid;
+    }
+
+    h3 {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--blue-dark);
+      margin: 20px 0 8px;
+      break-after: avoid;
+    }
+
+    p { margin: 0 0 10px; color: var(--text); }
+
+    ul, ol { margin: 0 0 12px 22px; padding: 0; }
+    li { margin: 4px 0; }
+
+    /* ─── Kroky (step-by-step) ─── */
+    .steps { margin: 16px 0 20px; counter-reset: step; }
+
+    .step {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      padding: 12px 0;
+      border-bottom: 1px dashed #d8ecf8;
+      break-inside: avoid;
+    }
+
+    .step:last-child { border-bottom: none; }
+
+    .step-num {
+      min-width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: var(--white);
+      font-weight: 900;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .step-body { flex: 1; }
+
+    .step-title {
+      font-weight: 800;
+      color: var(--dark-navy);
+      font-size: 14px;
+      margin-bottom: 3px;
+    }
+
+    .step-desc { font-size: 13px; color: var(--text-muted); margin: 0; }
+
+    /* ─── Callout boxy ─── */
+    .callout {
+      display: flex;
+      gap: 14px;
+      padding: 14px 18px;
+      border-radius: 10px;
+      margin: 14px 0;
+      break-inside: avoid;
+    }
+
+    .callout-icon { font-size: 20px; flex-shrink: 0; line-height: 1.3; }
+
+    .callout-body { flex: 1; }
+
+    .callout-title { font-weight: 800; font-size: 13px; margin-bottom: 2px; }
+
+    .callout-text { font-size: 12.5px; margin: 0; }
+
+    .callout-info { background: var(--light-bg); border-left: 4px solid var(--primary); }
+    .callout-info .callout-title { color: var(--blue-dark); }
+    .callout-info .callout-text  { color: #2a4a6e; }
+
+    .callout-warn { background: #fff8e0; border-left: 4px solid #f0a500; }
+    .callout-warn .callout-title { color: #7a4f00; }
+    .callout-warn .callout-text  { color: #5a3f00; }
+
+    .callout-tip { background: #e8f5e9; border-left: 4px solid #2e7d32; }
+    .callout-tip .callout-title { color: #1a5e20; }
+    .callout-tip .callout-text  { color: #1a4020; }
+
+    .callout-danger { background: #fce4ec; border-left: 4px solid var(--red-dark); }
+    .callout-danger .callout-title { color: var(--red-dark); }
+    .callout-danger .callout-text  { color: #6b0000; }
+
+    /* ─── Tabulky ─── */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 14px 0 20px;
+      font-size: 12.5px;
+      break-inside: avoid;
+    }
+
+    thead tr { background: var(--dark-navy); color: var(--white); }
+
+    thead th {
+      padding: 10px 14px;
+      text-align: left;
+      font-weight: 700;
+      font-size: 12px;
+      letter-spacing: .04em;
+    }
+
+    tbody tr:nth-child(even) { background: var(--light-bg); }
+    tbody tr:nth-child(odd)  { background: var(--white); }
+
+    tbody td {
+      padding: 9px 14px;
+      border-bottom: 1px solid #d4e9f7;
+      color: var(--text);
+    }
+
+    /* ─── Info grid (kartičky) ─── */
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 12px;
+      margin: 14px 0 20px;
+    }
+
+    .info-card {
+      background: var(--light-bg);
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 16px;
+      break-inside: avoid;
+    }
+
+    .info-card-icon { font-size: 22px; margin-bottom: 8px; }
+
+    .info-card-title {
+      font-weight: 800;
+      font-size: 13px;
+      color: var(--dark-navy);
+      margin-bottom: 4px;
+    }
+
+    .info-card-text { font-size: 12px; color: var(--text-muted); margin: 0; }
+
+    /* ─── Akce docházky ─── */
+    .action-list { display: flex; flex-direction: column; gap: 8px; margin: 14px 0 20px; }
+
+    .action-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 11px 16px;
+      border-radius: 10px;
+      background: #f7fbff;
+      border: 1.5px solid var(--border);
+      break-inside: avoid;
+    }
+
+    .action-dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .dot-green  { background: #22c55e; }
+    .dot-orange { background: #f59e0b; }
+    .dot-blue   { background: var(--primary); }
+    .dot-red    { background: var(--red-light); }
+
+    .action-name { font-weight: 800; font-size: 13px; color: var(--dark-navy); min-width: 180px; }
+    .action-desc { font-size: 12.5px; color: var(--text-muted); }
+
+    /* ─── Stav žádosti ─── */
+    .status {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 100px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+    .status-wait    { background: #fff3e0; color: #8c5000; }
+    .status-ok      { background: #e8f5e9; color: #1b5e20; }
+    .status-no      { background: #fce4ec; color: var(--red-dark); }
+
+    /* ─── Inline kód ─── */
+    code {
+      font-family: Consolas, "Courier New", monospace;
+      font-size: .9em;
+      padding: 2px 6px;
+      border-radius: 5px;
+      background: #e8f2fb;
+      color: var(--blue-dark);
+    }
+
+    /* ─── Zápatí stránky ─── */
+    .page-footer {
+      margin-top: 48px;
+      padding-top: 14px;
+      border-top: 1.5px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      color: #8ba8c4;
+      font-weight: 600;
+    }
+
+    /* ─── Separátor ─── */
+    hr.section-sep {
+      border: none;
+      border-top: 2px solid var(--light-bg);
+      margin: 28px 0;
+    }
+
+    /* ─── Rychlý přehled rolí ─── */
+    .role-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin: 18px 0 24px;
+    }
+
+    .role-card {
+      border-radius: 12px;
+      padding: 18px;
+      break-inside: avoid;
+    }
+
+    .role-card-emp  { background: var(--light-bg); border: 2px solid #a0d4f0; }
+    .role-card-mgr  { background: #fff8ee; border: 2px solid #f5c060; }
+    .role-card-adm  { background: #eef0fb; border: 2px solid #a8b4e8; }
+
+    .role-card-icon { font-size: 28px; margin-bottom: 8px; }
+
+    .role-card-name {
+      font-weight: 900;
+      font-size: 14px;
+      color: var(--dark-navy);
+      margin-bottom: 6px;
+    }
+
+    .role-card-list { list-style: none; margin: 0; padding: 0; }
+    .role-card-list li { font-size: 12px; color: var(--text-muted); padding: 2px 0; }
+    .role-card-list li::before { content: "✓ "; color: var(--primary); font-weight: 900; }
+  </style>
+</head>
+<body>
+<div class="doc-wrap">
+
+  <!-- ════════════════════════════════
+       TITULNÍ STRANA
+  ════════════════════════════════ -->
+  <div class="cover">
+    <div class="cover-logo">Chronis &nbsp;·&nbsp; Projekt Manufactory LAB</div>
+
+    <div class="cover-center">
+      <p class="cover-eyebrow">Dokumentace projektu</p>
+      <h1 class="cover-title">Uživatelská<br>a administrátorská<br>příručka</h1>
+      <p class="cover-subtitle">Docházkový systém pro evidenci pracovní doby a absencí</p>
+      <div class="cover-divider"></div>
+      <p class="cover-desc">
+        Tato příručka popisuje, jak pracovat s aplikací Chronis — od přihlášení přes každodenní
+        evidenci docházky až po správu firem a uživatelů pro administrátory.
+        Dokument je určen zaměstnancům, vedoucím směny i správcům systému.
+      </p>
+      <div class="cover-badges">
+        <span class="cover-badge">Zaměstnanec</span>
+        <span class="cover-badge">Vedoucí směny</span>
+        <span class="cover-badge">Administrátor</span>
+      </div>
+    </div>
+
+    <div class="cover-footer">
+      <span>Verze 1.0 &nbsp;·&nbsp; Lukáš Mareš</span>
+      <span>Datum: 28. 5. 2026</span>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════
+       OBSAH
+  ════════════════════════════════ -->
+  <div class="toc-page">
+    <h1 class="toc-heading">Obsah</h1>
+
+    <ul class="toc-list">
+
+      <li class="toc-section">
+        <span class="toc-num">1.</span>
+        <span class="toc-text">Přihlášení a základní orientace</span>
+        <span class="toc-role-chip chip-all">Všichni</span>
+      </li>
+
+      <li class="toc-section">
+        <span class="toc-num">2.</span>
+        <span class="toc-text">Příručka zaměstnance</span>
+        <span class="toc-role-chip chip-emp">Zaměstnanec</span>
+      </li>
+      <ul class="toc-sub">
+        <li><span class="toc-sub-num">2.1</span>Dashboard a přehled</li>
+        <li><span class="toc-sub-num">2.2</span>Moje docházka — evidence příchodu a odchodu</li>
+        <li><span class="toc-sub-num">2.3</span>Žádost o absenci</li>
+        <li><span class="toc-sub-num">2.4</span>Přehled mých žádostí</li>
+        <li><span class="toc-sub-num">2.5</span>Historie docházky</li>
+        <li><span class="toc-sub-num">2.6</span>Zprávy</li>
+      </ul>
+
+      <li class="toc-section">
+        <span class="toc-num">3.</span>
+        <span class="toc-text">Příručka vedoucího směny</span>
+        <span class="toc-role-chip chip-mgr">Vedoucí</span>
+      </li>
+      <ul class="toc-sub">
+        <li><span class="toc-sub-num">3.1</span>Dashboard vedoucího</li>
+        <li><span class="toc-sub-num">3.2</span>Správa zaměstnanců firmy</li>
+        <li><span class="toc-sub-num">3.3</span>Schvalování absencí</li>
+        <li><span class="toc-sub-num">3.4</span>Docházkové reporty</li>
+        <li><span class="toc-sub-num">3.5</span>Exporty</li>
+      </ul>
+
+      <li class="toc-section">
+        <span class="toc-num">4.</span>
+        <span class="toc-text">Příručka administrátora</span>
+        <span class="toc-role-chip chip-adm">Administrátor</span>
+      </li>
+      <ul class="toc-sub">
+        <li><span class="toc-sub-num">4.1</span>Dashboard administrátora</li>
+        <li><span class="toc-sub-num">4.2</span>Správa firem</li>
+        <li><span class="toc-sub-num">4.3</span>Správa uživatelů</li>
+        <li><span class="toc-sub-num">4.4</span>Schvalování absencí</li>
+        <li><span class="toc-sub-num">4.5</span>Reporty a exporty</li>
+        <li><span class="toc-sub-num">4.6</span>Nastavení systému</li>
+        <li><span class="toc-sub-num">4.7</span>Reset a nastavení hesla uživatele</li>
+      </ul>
+
+      <li class="toc-section">
+        <span class="toc-num">5.</span>
+        <span class="toc-text">Technické informace a spuštění</span>
+        <span class="toc-role-chip chip-adm">Administrátor</span>
+      </li>
+      <ul class="toc-sub">
+        <li><span class="toc-sub-num">5.1</span>Přehled rolí</li>
+        <li><span class="toc-sub-num">5.2</span>Spuštění systému</li>
+        <li><span class="toc-sub-num">5.3</span>Řešení nejčastějších problémů</li>
+      </ul>
+
+    </ul>
+  </div>
+
+
+  <!-- ════════════════════════════════
+       SEKCE 1 — PŘIHLÁŠENÍ
+  ════════════════════════════════ -->
+  <div class="content-page section-break">
+
+    <div class="section-header">
+      <div class="section-icon icon-all">🔐</div>
+      <div class="section-header-text">
+        <div class="section-num">Sekce 1</div>
+        <h1 class="section-title">Přihlášení a základní orientace</h1>
+        <p class="section-desc">Platí pro všechny uživatele — zaměstnance, vedoucí i administrátory.</p>
+      </div>
+    </div>
+
+    <h2>1.1 Jak se přihlásit</h2>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <p class="step-title">Otevřít přihlašovací stránku</p>
+          <p class="step-desc">Ve webovém prohlížeči zadejte adresu systému Chronis. Na úvodní stránce klikněte na tlačítko <strong>Přihlásit se</strong> v pravém horním rohu.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <p class="step-title">Zadat přihlašovací jméno a heslo</p>
+          <p class="step-desc">Zadejte přihlašovací jméno (username) a heslo. Tyto údaje vám předá administrátor nebo vedoucí, a to prostřednictvím e-mailu s odkazem pro nastavení hesla.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <p class="step-title">Kliknout na Přihlásit se</p>
+          <p class="step-desc">Po úspěšném přihlášení budete přesměrováni do vašeho dashboardu. Obsah dashboardu se liší podle vaší role.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout callout-warn">
+      <div class="callout-icon">⚠️</div>
+      <div class="callout-body">
+        <p class="callout-title">Zapomenuté heslo</p>
+        <p class="callout-text">Pokud heslo neznáte nebo jste ho zapomněli, kontaktujte administrátora nebo vedoucího. Správce vám zašle nový e-mail s odkazem pro nastavení hesla.</p>
+      </div>
+    </div>
+
+    <h2>1.2 Navigace v systému</h2>
+    <p>Po přihlášení se zobrazí levý postranní panel <strong>(sidebar)</strong> s dostupnými sekcemi. Sekce, které vidíte, závisí na vaší roli.</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Sekce</th>
+          <th>Zaměstnanec</th>
+          <th>Vedoucí</th>
+          <th>Administrátor</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Dashboard</td><td>✅</td><td>✅</td><td>✅</td></tr>
+        <tr><td>Moje docházka</td><td>✅</td><td>✅</td><td>—</td></tr>
+        <tr><td>Historie docházky</td><td>✅</td><td>✅</td><td>—</td></tr>
+        <tr><td>Žádost o absenci</td><td>✅</td><td>✅</td><td>—</td></tr>
+        <tr><td>Moje žádosti</td><td>✅</td><td>✅</td><td>—</td></tr>
+        <tr><td>Schvalování absencí</td><td>—</td><td>✅</td><td>✅</td></tr>
+        <tr><td>Docházkové reporty</td><td>—</td><td>✅</td><td>✅</td></tr>
+        <tr><td>Exporty</td><td>—</td><td>✅</td><td>✅</td></tr>
+        <tr><td>Uživatelé</td><td>—</td><td>✅ (jen svá firma)</td><td>✅ (vše)</td></tr>
+        <tr><td>Správa firem</td><td>—</td><td>—</td><td>✅</td></tr>
+        <tr><td>Nastavení systému</td><td>—</td><td>—</td><td>✅</td></tr>
+        <tr><td>Zprávy</td><td>✅</td><td>✅</td><td>✅</td></tr>
+        <tr><td>Nápověda</td><td>✅</td><td>✅</td><td>✅</td></tr>
+      </tbody>
+    </table>
+
+    <h2>1.3 Odhlášení</h2>
+    <p>Pro odhlášení klikněte na možnost <strong>Odhlásit se</strong> v postranním panelu nebo v uživatelském menu. Po odhlášení budete přesměrováni zpět na přihlašovací stránku.</p>
+
+    <div class="callout callout-tip">
+      <div class="callout-icon">💡</div>
+      <div class="callout-body">
+        <p class="callout-title">Bezpečnost</p>
+        <p class="callout-text">Vždy se odhlaste po skončení práce, zejména pokud používáte sdílený počítač.</p>
+      </div>
+    </div>
+
+    <div class="page-footer">
+      <span>Chronis — Uživatelská a administrátorská příručka</span>
+      <span>Sekce 1 · Přihlášení</span>
+    </div>
+  </div>
+
+
+  <!-- ════════════════════════════════
+       SEKCE 2 — ZAMĚSTNANEC
+  ════════════════════════════════ -->
+  <div class="content-page section-break">
+
+    <div class="section-header">
+      <div class="section-icon icon-emp">👤</div>
+      <div class="section-header-text">
+        <div class="section-num">Sekce 2</div>
+        <h1 class="section-title">Příručka zaměstnance</h1>
+        <p class="section-desc">
+          Tato část popisuje funkce dostupné každému zaměstnanci.
+          <span class="role-badge badge-emp" style="margin-left:10px">👤 Zaměstnanec</span>
+        </p>
+      </div>
+    </div>
+
+    <h2>2.1 Dashboard — přehled</h2>
+    <p>Po přihlášení se zobrazí <strong>dashboard zaměstnance</strong> s přehledem dnešního dne.</p>
+
+    <div class="info-grid">
+      <div class="info-card">
+        <div class="info-card-icon">🕐</div>
+        <p class="info-card-title">Dnešní stav</p>
+        <p class="info-card-text">Aktuální stav docházky — příchod, pauza, mimo pracoviště nebo ukončeno.</p>
+      </div>
+      <div class="info-card">
+        <div class="info-card-icon">⏱️</div>
+        <p class="info-card-title">Odpracováno dnes</p>
+        <p class="info-card-text">Počet odpracovaných hodin za dnešní den.</p>
+      </div>
+      <div class="info-card">
+        <div class="info-card-icon">📋</div>
+        <p class="info-card-title">Moje žádosti</p>
+        <p class="info-card-text">Počet podaných žádostí o absenci a jejich stav.</p>
+      </div>
+      <div class="info-card">
+        <div class="info-card-icon">📅</div>
+        <p class="info-card-title">Dnešní směna</p>
+        <p class="info-card-text">Přiřazená směna pro dnešní den.</p>
+      </div>
+    </div>
+
+    <hr class="section-sep">
+
+    <h2>2.2 Moje docházka — evidence příchodu a odchodu</h2>
+    <p>Stránka <strong>Moje docházka</strong> slouží k záznamu příchodu, pauzy, odchodu mimo pracoviště a ukončení směny.</p>
+
+    <h3>Dostupné akce</h3>
+    <div class="action-list">
+      <div class="action-item">
+        <div class="action-dot dot-green"></div>
+        <span class="action-name">Příchod</span>
+        <span class="action-desc">Zahájení pracovního dne. Aktivní tehdy, pokud ještě nebyl zaznamenán příchod dnešního dne.</span>
+      </div>
+      <div class="action-item">
+        <div class="action-dot dot-orange"></div>
+        <span class="action-name">Začátek pauzy</span>
+        <span class="action-desc">Zahájení přestávky. Dostupné tehdy, pokud jste v práci a nepauze.</span>
+      </div>
+      <div class="action-item">
+        <div class="action-dot dot-green"></div>
+        <span class="action-name">Konec pauzy</span>
+        <span class="action-desc">Ukončení přestávky a návrat k práci. Dostupné jen když jste v pauze.</span>
+      </div>
+      <div class="action-item">
+        <div class="action-dot dot-blue"></div>
+        <span class="action-name">Odchod mimo pracoviště</span>
+        <span class="action-desc">Krátký odchod z pracoviště (schůzka, výjezd). Nezavře pracovní den.</span>
+      </div>
+      <div class="action-item">
+        <div class="action-dot dot-blue"></div>
+        <span class="action-name">Návrat na pracoviště</span>
+        <span class="action-desc">Návrat po krátkém odchodu mimo pracoviště.</span>
+      </div>
+      <div class="action-item">
+        <div class="action-dot dot-red"></div>
+        <span class="action-name">Ukončit směnu</span>
+        <span class="action-desc">Uzavření pracovního dne. Nelze ukončit při probíhající pauze ani odchodu mimo pracoviště.</span>
+      </div>
+    </div>
+
+    <h3>Typický průběh dne</h3>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <p class="step-title">Příchod do práce</p>
+          <p class="step-desc">Klikněte na tlačítko <strong>Příchod</strong>. Systém zaznamená čas příchodu.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <p class="step-title">Pauza (volitelné)</p>
+          <p class="step-desc">Klikněte na <strong>Začátek pauzy</strong> a po skončení na <strong>Konec pauzy</strong>. Systém odečte tuto dobu od odpracovaného času.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <p class="step-title">Odchod mimo pracoviště (volitelné)</p>
+          <p class="step-desc">Klikněte na <strong>Odchod mimo pracoviště</strong>. Po návratu klikněte na <strong>Návrat na pracoviště</strong>. Čas mimo pracoviště se odečte od odpracovaného času.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <p class="step-title">Ukončení směny</p>
+          <p class="step-desc">Na konci pracovního dne klikněte na <strong>Ukončit směnu</strong>. Systém uzavře den a vypočítá celkový odpracovaný čas.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout callout-warn">
+      <div class="callout-icon">⚠️</div>
+      <div class="callout-body">
+        <p class="callout-title">Pořadí akcí je důležité</p>
+        <p class="callout-text">Nelze ukončit směnu, pokud probíhá pauza nebo odchod mimo pracoviště. Vždy nejdříve ukončete aktivní stav a teprve poté ukončete směnu.</p>
+      </div>
+    </div>
+
+    <hr class="section-sep">
+
+    <h2>2.3 Žádost o absenci</h2>
+    <p>Na stránce <strong>Žádost o absenci</strong> vytvořte novou žádost, která bude odeslána ke schválení vedoucímu nebo administrátorovi.</p>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <p class="step-title">Vybrat typ absence</p>
+          <p class="step-desc">Vyberte z nabídky, například: <strong>Dovolená</strong>, <strong>Nemocenská</strong>, <strong>Ošetřování člena rodiny</strong> nebo <strong>Jiná</strong>.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <p class="step-title">Datum od a datum do</p>
+          <p class="step-desc">Zadejte první a poslední den absence. Datum „do" musí být stejné nebo pozdější než datum „od".</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <p class="step-title">Čas od a čas do (volitelné)</p>
+          <p class="step-desc">Pro kratší absenci v rámci jednoho dne upřesněte přesný čas.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <p class="step-title">Důvod / poznámka</p>
+          <p class="step-desc">Doplňte krátkou poznámku pro vedoucího nebo administrátora.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">5</div>
+        <div class="step-body">
+          <p class="step-title">Odeslat žádost</p>
+          <p class="step-desc">Klikněte na <strong>Odeslat žádost</strong>. Žádost bude uložena ve stavu <strong>Čeká na schválení</strong>.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout callout-info">
+      <div class="callout-icon">ℹ️</div>
+      <div class="callout-body">
+        <p class="callout-title">Roční nárok dovolené</p>
+        <p class="callout-text">Systém kontroluje, zda vaše žádost nepřekračuje roční nárok dovolené nastavený vaší firmou. Pokud by žádost překročila limit, systém vás upozorní.</p>
+      </div>
+    </div>
+
+    <hr class="section-sep">
+
+    <h2>2.4 Přehled mých žádostí</h2>
+    <p>Na stránce <strong>Moje žádosti</strong> vidíte přehled všech podaných žádostí a jejich aktuální stav.</p>
+
+    <table>
+      <thead>
+        <tr><th>Stav</th><th>Popis</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="status status-wait">Čeká na schválení</span></td>
+          <td>Žádost byla podána a čeká na rozhodnutí vedoucího nebo administrátora.</td>
+        </tr>
+        <tr>
+          <td><span class="status status-ok">Schváleno</span></td>
+          <td>Žádost byla schválena. Absence je potvrzena.</td>
+        </tr>
+        <tr>
+          <td><span class="status status-no">Zamítnuto</span></td>
+          <td>Žádost byla zamítnuta. Kontaktujte vedoucího pro upřesnění důvodu.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <hr class="section-sep">
+
+    <h2>2.5 Historie docházky</h2>
+    <p>Stránka <strong>Historie docházky</strong> zobrazuje přehled odpracovaných dnů za vybrané období.</p>
+    <p>Pro každý den jsou zobrazeny: čas příchodu, čas odchodu, délka pauzy, čas mimo pracoviště, celkem odpracováno a stav dne. Použijte filtr pro výběr měsíce nebo vlastního období.</p>
+
+    <hr class="section-sep">
+
+    <h2>2.6 Zprávy</h2>
+    <p>Stránka <strong>Zprávy</strong> umožňuje přijímat systémové notifikace a odesílat interní zprávy ostatním uživatelům systému.</p>
+    <ul>
+      <li>Vyberte příjemce ze seznamu uživatelů.</li>
+      <li>Napište zprávu a klikněte na <strong>Odeslat</strong>.</li>
+      <li>Přijaté zprávy a notifikace se zobrazují v levém sloupci.</li>
+    </ul>
+
+    <div class="page-footer">
+      <span>Chronis — Uživatelská a administrátorská příručka</span>
+      <span>Sekce 2 · Zaměstnanec</span>
+    </div>
+  </div>
+
+
+  <!-- ════════════════════════════════
+       SEKCE 3 — VEDOUCÍ SMĚNY
+  ════════════════════════════════ -->
+  <div class="content-page section-break">
+
+    <div class="section-header">
+      <div class="section-icon icon-mgr">👔</div>
+      <div class="section-header-text">
+        <div class="section-num">Sekce 3</div>
+        <h1 class="section-title">Příručka vedoucího směny</h1>
+        <p class="section-desc">
+          Rozšířené funkce pro vedoucí směny nad zaměstnanci vlastní firmy.
+          <span class="role-badge badge-mgr" style="margin-left:10px">👔 Vedoucí směny</span>
+        </p>
+      </div>
+    </div>
+
+    <div class="callout callout-info">
+      <div class="callout-icon">ℹ️</div>
+      <div class="callout-body">
+        <p class="callout-title">Rozsah přístupu vedoucího</p>
+        <p class="callout-text">Vedoucí směny pracuje výhradně s uživateli, žádostmi a daty <strong>své firmy</strong>. Nemá přístup ke správě firem, globálnímu nastavení ani datům jiných firem.</p>
+      </div>
+    </div>
+
+    <p>Vedoucí směny má navíc oproti zaměstnanci přístup k: správě zaměstnanců své firmy, schvalování absencí, docházkovým reportům a exportům.</p>
+
+    <hr class="section-sep">
+
+    <h2>3.1 Dashboard vedoucího</h2>
+    <p>Dashboard vedoucího zobrazuje přehled týmu:</p>
+    <div class="info-grid">
+      <div class="info-card">
+        <div class="info-card-icon">👥</div>
+        <p class="info-card-title">Počet zaměstnanců</p>
+        <p class="info-card-text">Celkový počet spravovaných zaměstnanců v rámci firmy.</p>
+      </div>
+      <div class="info-card">
+        <div class="info-card-icon">📥</div>
+        <p class="info-card-title">Čekající žádosti</p>
+        <p class="info-card-text">Počet žádostí o absenci, které čekají na vaše rozhodnutí.</p>
+      </div>
+      <div class="info-card">
+        <div class="info-card-icon">✅</div>
+        <p class="info-card-title">Vyřízené žádosti</p>
+        <p class="info-card-text">Počet žádostí, které jste již schválili nebo zamítli.</p>
+      </div>
+    </div>
+
+    <hr class="section-sep">
+
+    <h2>3.2 Správa zaměstnanců firmy</h2>
+    <p>Na stránce <strong>Uživatelé</strong> můžete spravovat zaměstnance vaší firmy.</p>
+
+    <h3>Vytvoření nového zaměstnance</h3>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <p class="step-title">Klikněte na tlačítko Přidat uživatele</p>
+          <p class="step-desc">V přehledu uživatelů klikněte na tlačítko pro vytvoření nového zaměstnance.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <p class="step-title">Vyplnit základní údaje</p>
+          <p class="step-desc">Zadejte jméno, příjmení, e-mail, telefon, datum nástupu, oddělení a přihlašovací jméno. Mzda, čip a výchozí směna jsou volitelné.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <p class="step-title">Přiřadit roli</p>
+          <p class="step-desc">Vyberte roli zaměstnance. <strong>Vedoucí nemůže vytvořit administrátora.</strong></p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <p class="step-title">Odeslat odkaz pro nastavení hesla</p>
+          <p class="step-desc">Po uložení systém odešle zaměstnanci e-mail s odkazem, kde si nastaví vlastní heslo. Odkaz je jednorázový a časově omezený.</p>
+        </div>
+      </div>
+    </div>
+
+    <h3>Úprava a deaktivace zaměstnance</h3>
+    <p>V přehledu uživatelů klikněte na ikonu editace u daného zaměstnance. Můžete upravit veškeré údaje nebo zaměstnance deaktivovat přepnutím přepínače <strong>Aktivní</strong>. Deaktivovaný zaměstnanec se nemůže přihlásit, ale jeho záznamy zůstanou v systému.</p>
+
+    <div class="callout callout-warn">
+      <div class="callout-icon">⚠️</div>
+      <div class="callout-body">
+        <p class="callout-title">Fotografie zaměstnance</p>
+        <p class="callout-text">Fotografii lze nahrát ve formuláři pro editaci uživatele. Pokud zaměstnanec nemá fotografii, zobrazují se jeho iniciály.</p>
+      </div>
+    </div>
+
+    <hr class="section-sep">
+
+    <h2>3.3 Schvalování absencí</h2>
+    <p>Na stránce <strong>Schvalování absencí</strong> vidíte přehled žádostí zaměstnanců vaší firmy.</p>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <p class="step-title">Vybrat žádost</p>
+          <p class="step-desc">V přehledu žádostí nebo v kalendáři klikněte na žádost, kterou chcete vyřídit.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <p class="step-title">Zkontrolovat detail</p>
+          <p class="step-desc">Zobrazí se detail žádosti — typ absence, termín, počet dní, poznámka zaměstnance.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <p class="step-title">Schválit nebo zamítnout</p>
+          <p class="step-desc">Klikněte na tlačítko <strong>Schválit</strong> nebo <strong>Zamítnout</strong>. Volitelně přidejte poznámku.</p>
+        </div>
+      </div>
+    </div>
+
+    <hr class="section-sep">
+
+    <h2>3.4 Docházkové reporty</h2>
+    <p>Stránka <strong>Docházkové reporty</strong> zobrazuje souhrn docházkových statistik za vaši firmu.</p>
+    <p>K dispozici jsou filtry pro výběr <strong>období</strong> a <strong>oddělení</strong>. Reporty zobrazují odpracované hodiny, počet absencí, počet pozdních příchodů, přesčasy, přehled podle zaměstnanců, přehled podle oddělení a týdenní graf.</p>
+
+    <hr class="section-sep">
+
+    <h2>3.5 Exporty</h2>
+    <p>Na stránce <strong>Exporty</strong> si stáhnete data vaší firmy ve formátu <strong>CSV</strong> nebo <strong>XLSX</strong>.</p>
+    <p>Dostupné typy exportu: docházka, absence, mzdy, seznam uživatelů.</p>
+
+    <div class="callout callout-info">
+      <div class="callout-icon">ℹ️</div>
+      <div class="callout-body">
+        <p class="callout-title">Omezení exportu pro vedoucího</p>
+        <p class="callout-text">Vedoucí směny může exportovat výhradně data zaměstnanců své firmy. Nelze exportovat data jiných firem.</p>
+      </div>
+    </div>
+
+    <div class="page-footer">
+      <span>Chronis — Uživatelská a administrátorská příručka</span>
+      <span>Sekce 3 · Vedoucí směny</span>
+    </div>
+  </div>
+
+
+  <!-- ════════════════════════════════
+       SEKCE 4 — ADMINISTRÁTOR
+  ════════════════════════════════ -->
+  <div class="content-page section-break">
+
+    <div class="section-header">
+      <div class="section-icon icon-adm">🛡️</div>
+      <div class="section-header-text">
+        <div class="section-num">Sekce 4</div>
+        <h1 class="section-title">Příručka administrátora</h1>
+        <p class="section-desc">
+          Plný přístup k systému — správa firem, uživatelů, reportů a nastavení.
+          <span class="role-badge badge-adm" style="margin-left:10px">🛡️ Administrátor</span>
+        </p>
+      </div>
+    </div>
+
+    <hr class="section-sep">
+
+    <h2>4.1 Dashboard administrátora</h2>
+    <p>Dashboard administrátora poskytuje rychlý přehled celého systému:</p>
+    <ul>
+      <li>celkový počet firem v systému,</li>
+      <li>informace o přihlášeném uživateli a jeho roli,</li>
+      <li>rychlé akce (přejít na správu firem, uživatelů apod.),</li>
+      <li>přehled posledních přidaných firem.</li>
+    </ul>
+
+    <hr class="section-sep">
+
+    <h2>4.2 Správa firem</h2>
+    <p>Na stránce <strong>Správa firem</strong> spravujete všechny firmy evidované v systému Chronis.</p>
+
+    <h3>Vytvoření firmy</h3>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <p class="step-title">Klikněte na Přidat firmu</p>
+          <p class="step-desc">V přehledu firem klikněte na tlačítko pro vytvoření nové firmy.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <p class="step-title">Vyplnit základní údaje firmy</p>
+          <p class="step-desc">Zadejte název, IČO, e-mail, telefon a adresu firmy. Logo je volitelné.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <p class="step-title">Nastavit roční nárok dovolené</p>
+          <p class="step-desc">Nastavte počet dní dovolené pro zaměstnance firmy (povolený rozsah: 20–40 dní). Výchozí hodnota je 20 dní.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <p class="step-title">Uložit firmu</p>
+          <p class="step-desc">Klikněte na tlačítko <strong>Uložit</strong>. Firma se zobrazí v přehledu.</p>
+        </div>
+      </div>
+    </div>
+
+    <h3>Úprava a smazání firmy</h3>
+    <p>V přehledu firem klikněte na ikonu editace pro úpravu nebo na ikonu smazání pro odstranění firmy. <strong>Smazání firmy je nevratné.</strong></p>
+
+    <div class="callout callout-danger">
+      <div class="callout-icon">🚫</div>
+      <div class="callout-body">
+        <p class="callout-title">Pozor na smazání firmy</p>
+        <p class="callout-text">Před smazáním firmy se ujistěte, že u ní nejsou evidováni aktivní zaměstnanci. Smazání je nevratné.</p>
+      </div>
+    </div>
+
+    <hr class="section-sep">
+
+    <h2>4.3 Správa uživatelů</h2>
+    <p>Na stránce <strong>Uživatelé</strong> spravujete všechny uživatele ve všech firmách. Princip práce je stejný jako u vedoucího směny, ale s plným přístupem.</p>
+
+    <table>
+      <thead>
+        <tr><th>Oprávnění</th><th>Vedoucí</th><th>Administrátor</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Vytvořit zaměstnance</td><td>✅ (jen svá firma)</td><td>✅ (všechny firmy)</td></tr>
+        <tr><td>Upravit zaměstnance</td><td>✅ (jen svá firma)</td><td>✅ (všechny firmy)</td></tr>
+        <tr><td>Vytvořit vedoucího</td><td>✅</td><td>✅</td></tr>
+        <tr><td>Vytvořit administrátora</td><td>❌</td><td>✅</td></tr>
+        <tr><td>Smazat uživatele</td><td>❌</td><td>✅</td></tr>
+      </tbody>
+    </table>
+
+    <hr class="section-sep">
+
+    <h2>4.4 Schvalování absencí</h2>
+    <p>Administrátor vidí žádosti o absenci ze <strong>všech firem</strong> a může je schvalovat nebo zamítat. Postup je totožný jako u vedoucího (viz sekce 3.3).</p>
+
+    <hr class="section-sep">
+
+    <h2>4.5 Reporty a exporty</h2>
+    <p>Administrátor má přístup k reportům a exportům pro <strong>všechny firmy</strong>. K dispozici jsou navíc filtry pro výběr konkrétní firmy.</p>
+    <p>Dostupné typy exportu: docházka, absence, mzdy, uživatelé, firmy.</p>
+
+    <hr class="section-sep">
+
+    <h2>4.6 Nastavení systému</h2>
+    <p>Na stránce <strong>Nastavení</strong> může administrátor upravit globální parametry systému:</p>
+
+    <table>
+      <thead>
+        <tr><th>Parametr</th><th>Popis</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Název systému</td><td>Zobrazovaný název aplikace.</td></tr>
+        <tr><td>Hlavní e-mail</td><td>Systémový e-mail pro odesílání notifikací a kontaktního formuláře.</td></tr>
+        <tr><td>Záložní začátek směny</td><td>Výchozí čas začátku směny, pokud zaměstnanec nemá přiřazenou směnu.</td></tr>
+        <tr><td>Záložní konec směny</td><td>Výchozí čas konce směny.</td></tr>
+        <tr><td>Notifikační volby</td><td>Nastavení, kdy a komu se posílají systémové notifikace.</td></tr>
+      </tbody>
+    </table>
+
+    <hr class="section-sep">
+
+    <h2>4.7 Reset a nastavení hesla uživatele</h2>
+    <p>Pokud zaměstnanec potřebuje nastavit nebo resetovat heslo, postupujte takto:</p>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <p class="step-title">Otevřít profil uživatele</p>
+          <p class="step-desc">V přehledu uživatelů klikněte na editaci daného zaměstnance.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <p class="step-title">Odeslat odkaz pro nastavení hesla</p>
+          <p class="step-desc">Klikněte na tlačítko <strong>Odeslat odkaz pro nastavení hesla</strong>. Systém vygeneruje jednorázový token a odešle zaměstnanci e-mail.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <p class="step-title">Zaměstnanec nastaví heslo</p>
+          <p class="step-desc">Zaměstnanec otevře odkaz z e-mailu, zadá nové heslo a potvrdí. Odkaz je jednorázový — po použití ztrácí platnost.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout callout-tip">
+      <div class="callout-icon">💡</div>
+      <div class="callout-body">
+        <p class="callout-title">Bezpečnost tokenu</p>
+        <p class="callout-text">Systém nikdy neodesílá heslo v čitelné podobě. V databázi se ukládá pouze hash tokenu. Token má omezenou platnost a po jednom použití je automaticky zneplatněn.</p>
+      </div>
+    </div>
+
+    <div class="page-footer">
+      <span>Chronis — Uživatelská a administrátorská příručka</span>
+      <span>Sekce 4 · Administrátor</span>
+    </div>
+  </div>
+
+
+  <!-- ════════════════════════════════
+       SEKCE 5 — TECHNICKÉ INFORMACE
+  ════════════════════════════════ -->
+  <div class="content-page section-break">
+
+    <div class="section-header">
+      <div class="section-icon icon-tech">⚙️</div>
+      <div class="section-header-text">
+        <div class="section-num">Sekce 5</div>
+        <h1 class="section-title">Technické informace a spuštění</h1>
+        <p class="section-desc">Informace pro administrátory a správce systému.</p>
+      </div>
+    </div>
+
+    <h2>5.1 Přehled rolí</h2>
+
+    <div class="role-grid">
+      <div class="role-card role-card-emp">
+        <div class="role-card-icon">👤</div>
+        <p class="role-card-name">Zaměstnanec</p>
+        <ul class="role-card-list">
+          <li>Evidence docházky</li>
+          <li>Žádosti o absenci</li>
+          <li>Historie docházky</li>
+          <li>Zprávy</li>
+        </ul>
+      </div>
+      <div class="role-card role-card-mgr">
+        <div class="role-card-icon">👔</div>
+        <p class="role-card-name">Vedoucí směny</p>
+        <ul class="role-card-list">
+          <li>Vše co zaměstnanec</li>
+          <li>Správa zaměstnanců firmy</li>
+          <li>Schvalování absencí</li>
+          <li>Reporty a exporty firmy</li>
+        </ul>
+      </div>
+      <div class="role-card role-card-adm">
+        <div class="role-card-icon">🛡️</div>
+        <p class="role-card-name">Administrátor</p>
+        <ul class="role-card-list">
+          <li>Správa všech firem</li>
+          <li>Správa všech uživatelů</li>
+          <li>Globální reporty</li>
+          <li>Nastavení systému</li>
+        </ul>
+      </div>
+    </div>
+
+    <hr class="section-sep">
+
+    <h2>5.2 Spuštění systému</h2>
+    <p>Pro lokální spuštění systému Chronis jsou potřeba:</p>
+    <ul>
+      <li><strong>WAMP</strong> (nebo XAMPP) — pro PHP backend a MySQL databázi,</li>
+      <li><strong>Node.js</strong> — pro spuštění frontendu.</li>
+    </ul>
+
+    <h3>Backend</h3>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <p class="step-title">Zkopírovat backend</p>
+          <p class="step-desc">Obsah složky <code>backend/</code> zkopírujte do <code>C:\wamp64\www\api\</code>.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <p class="step-title">Importovat databázi</p>
+          <p class="step-desc">Otevřete phpMyAdmin, vytvořte databázi <code>chronisdb</code> a importujte SQL soubor nebo spusťte migrační skripty ze složky <code>backend/sql/</code>.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <p class="step-title">Spustit WAMP</p>
+          <p class="step-desc">Spusťte WAMP a ověřte, že Apache i MySQL jsou aktivní (zelená ikona v systémové liště).</p>
+        </div>
+      </div>
+    </div>
+
+    <h3>Frontend</h3>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <p class="step-title">Nainstalovat závislosti</p>
+          <p class="step-desc">V terminálu přejděte do složky <code>frontend/</code> a spusťte příkaz <code>npm install</code>.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <p class="step-title">Spustit vývojový server</p>
+          <p class="step-desc">Spusťte příkaz <code>npm run dev</code>. Aplikace bude dostupná na adrese <code>http://localhost:5173</code>.</p>
+        </div>
+      </div>
+    </div>
+
+    <hr class="section-sep">
+
+    <h2>5.3 Řešení nejčastějších problémů</h2>
+
+    <table>
+      <thead>
+        <tr><th>Problém</th><th>Možná příčina</th><th>Řešení</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Nelze se přihlásit</td>
+          <td>Chybné přihlašovací jméno nebo heslo</td>
+          <td>Kontaktujte administrátora pro reset hesla.</td>
+        </tr>
+        <tr>
+          <td>Stránka hlásí chybu připojení</td>
+          <td>WAMP není spuštěn</td>
+          <td>Spusťte WAMP a zkontrolujte, že Apache i MySQL běží.</td>
+        </tr>
+        <tr>
+          <td>Nelze odeslat žádost o absenci</td>
+          <td>Chybí povinná pole nebo překročen limit dovolené</td>
+          <td>Zkontrolujte, zda jsou vyplněna pole: typ, datum od, datum do, poznámka.</td>
+        </tr>
+        <tr>
+          <td>Nelze ukončit směnu</td>
+          <td>Probíhá pauza nebo odchod mimo pracoviště</td>
+          <td>Ukončete aktivní pauzu nebo vraťte se z pracoviště a pak ukončete směnu.</td>
+        </tr>
+        <tr>
+          <td>E-mail s odkazem pro heslo nepřišel</td>
+          <td>Chybná konfigurace SMTP nebo e-mail ve spamu</td>
+          <td>Zkontrolujte složku spamu. Správce ověří konfiguraci v <code>backend/config.env</code>.</td>
+        </tr>
+        <tr>
+          <td>Odkaz pro nastavení hesla nefunguje</td>
+          <td>Odkaz byl již použit nebo vypršela platnost</td>
+          <td>Požádejte administrátora o zaslání nového odkazu.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="callout callout-info">
+      <div class="callout-icon">ℹ️</div>
+      <div class="callout-body">
+        <p class="callout-title">Technická podpora</p>
+        <p class="callout-text">V případě problémů, které tato příručka neřeší, kontaktujte správce systému nebo využijte stránku <strong>Nápověda</strong> přímo v aplikaci.</p>
+      </div>
+    </div>
+
+    <div class="page-footer">
+      <span>Chronis — Uživatelská a administrátorská příručka</span>
+      <span>Sekce 5 · Technické informace</span>
+    </div>
+  </div>
+
+</div><!-- /doc-wrap -->
+</body>
+</html>

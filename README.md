@@ -1,52 +1,79 @@
-# ⏱️ Chronis – Docházkový systém pro firmy
+# Chronis - docházkový systém pro firmy
 
-**Chronis** je webový **docházkový systém**, který slouží k evidenci pracovní doby zaměstnanců ve firmách.  
-Projekt byl vytvořen jako **školní projekt** se zaměřením na moderní frontend a jednoduchý backend s databází.
+**Chronis** je webový docházkový systém pro evidenci pracovní doby, absencí a základní správu firemních dat.
 
-Cílem projektu je umožnit:
-- zaměstnancům zaznamenávat **příchody a odchody**
-- administrátorům přehledně **spravovat docházku a uživatele**
+Projekt vzniká jako školní projekt se zaměřením na moderní frontend v Reactu a jednoduchý PHP backend s databází MySQL.
 
----
+## Hlavní funkce
 
-## 🎯 Hlavní funkce
+- evidence příchodu a odchodu
+- žádosti o absenci
+- schvalování absencí pro administrátora
+- správa firem
+- uživatelské role
+- responzivní administrační rozhraní
 
-✅ Evidence příchodu a odchodu  
-✅ Výpočet odpracovaných hodin  
-✅ Uživatelské role (zaměstnanec / administrátor)  
-✅ Přehledná historie docházky  
-✅ Moderní responzivní rozhraní  
+## Dokumentace projektu
 
----
+Povinná projektová dokumentace je uložená ve složce `docs/`:
 
-## 🛠️ Použité technologie
+- `docs/SRS.md` - Software Requirements Specification
+- `docs/SDD.md` - Software Design Document
+- `docs/export/SRS.html` a `docs/export/SRS.pdf` - exportovaná verze SRS
+- `docs/export/SDD.html` a `docs/export/SDD.pdf` - exportovaná verze SDD
+
+Export dokumentace lze znovu vygenerovat příkazem:
+
+```bash
+node scripts/build-docs.js
+```
+
+## Použité technologie
 
 ### Frontend
-- ⚛️ **React**
-- 🎨 **Tailwind CSS**
-- 🌐 Komunikace s backendem přes REST API
+
+- React
+- Vite
+- Tailwind CSS
+- React Router
+- Lucide React
 
 ### Backend
-- 🐘 **PHP**
-- 🗄️ **MySQL**
-- 🔐 Zpracování dat a logiky aplikace
 
----
+- PHP
+- MySQL
+- REST API endpointy
 
-
----
-
-# ⚛️ Frontend (React + Tailwind)
-
-Frontend slouží jako uživatelské rozhraní aplikace.  
-Uživatel zde provádí přihlášení, zaznamenává docházku a prohlíží přehledy.
-
-## 📦 Instalace frontendu
+## Instalace frontendu
 
 ```bash
 cd frontend
 npm install
 npm run dev
+```
 
-## 📂 Struktura projektu
+## Ověření frontendu
 
+```bash
+cd frontend
+npm run build
+npm run test -- --run
+```
+
+## Struktura frontendu
+
+Struktura aplikace je popsaná v souboru:
+
+```text
+frontend/src/ARCHITECTURE.md
+```
+
+## Backend
+
+Backend endpointy jsou ve složce:
+
+```text
+backend/
+```
+
+Pro lokální běh je potřeba mít připravenou databázi `chronisdb` a správně nastavené připojení v `backend/connection.php`.

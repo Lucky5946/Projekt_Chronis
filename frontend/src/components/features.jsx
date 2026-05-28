@@ -24,7 +24,7 @@ export default function Features() {
           viewport={{ once: true, amount: 0.3 }}
           variants={headingVariants}
         >
-          CO UMÍME?
+          Co umíme?
         </motion.h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Feature 1 */}

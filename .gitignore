@@ -1,0 +1,19 @@
+# Závislosti
+frontend/node_modules/
+node_modules/
+
+# Build výstup
+frontend/dist/
+
+# Prostředí a tajné údaje
+backend/config.env
+
+# Nahrané soubory uživatelů (generované za běhu)
+backend/uploads/users/*.png
+backend/uploads/users/*.jpg
+backend/uploads/users/*.jpeg
+backend/uploads/users/*.webp
+
+# OS soubory
+.DS_Store
+Thumbs.db

@@ -54,7 +54,7 @@ export default function ContactSection() {
   };
 
   return (
-    <section id="kontakt" className="w-full py-20">
+    <section id="kontakt" className="w-full py-20 scroll-mt-24">
       <div className="max-w-7xl mx-auto px-6">
         <div className="bg-pozadi rounded-[120px] shadow-lg flex flex-col md:flex-row overflow-hidden">
           {/* Levá část - text + obrázek */}

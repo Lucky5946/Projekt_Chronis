@@ -1,33 +1,42 @@
 <?php
-session_start(); // 🔴 musí být úplně první
+session_start();
 
-require_once "connection.php";
-
-header("Content-Type: application/json");
+header("Content-Type: application/json; charset=utf-8");
 header("Access-Control-Allow-Origin: http://localhost:5173");
 header("Access-Control-Allow-Methods: GET, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type");
-header("Access-Control-Allow-Credentials: true"); // důležité pro cookie přes CORS
+header("Access-Control-Allow-Credentials: true");
+
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit();
+}
+
+require_once "connection.php";
 
 try {
-    // Používáme už vytvořené připojení z connection.php
-$stmt = $conn->prepare("  SELECT 
-            f.id_firma, 
-            f.nazev, 
-            f.email, 
-            f.telefon, 
-            p.obec,
-            f.logo_cesta
+    $stmt = $conn->prepare("
+        SELECT
+            f.id_firma,
+            f.nazev,
+            f.ico,
+            f.email,
+            f.telefon,
+            f.logo_cesta,
+            f.dovolena_dni,
+            a.ulice,
+            a.cislo_popisne,
+            p.id_psc,
+            p.obec
         FROM firmy f
         LEFT JOIN adresy a ON f.id_adresa = a.id_adresa
-        LEFT JOIN posty p ON a.id_psc = p.id_psc");
-$stmt->execute();
-$firmy = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        LEFT JOIN posty p ON a.id_psc = p.id_psc
+        ORDER BY f.nazev ASC
+    ");
+    $stmt->execute();
 
-
-    echo json_encode($firmy);
-
+    echo json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
 } catch (PDOException $e) {
     http_response_code(500);
-    echo json_encode(["error" => "Database error: " . $e->getMessage()]);
+    echo json_encode(["success" => false, "message" => "Chyba serveru: " . $e->getMessage()]);
 }

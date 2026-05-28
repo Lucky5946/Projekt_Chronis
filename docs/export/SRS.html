@@ -1,0 +1,682 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SRS — Software Requirements Specification · Chronis</title>
+  <style>
+    :root {
+      --primary:    #00AEEF;
+      --dark-navy:  #023E8A;
+      --mid-blue:   #0096C7;
+      --light-bg:   #E4F3FD;
+      --blue-dark:  #0047B3;
+      --text:       #1a2535;
+      --muted:      #4a5a6e;
+      --border:     #c5dff0;
+      --white:      #ffffff;
+    }
+    @page        { size: A4; margin: 15mm 14mm 18mm; }
+    @page :first { margin: 0; }
+    *, *::before, *::after { box-sizing: border-box; }
+    html { font-family: "Segoe UI", Arial, sans-serif; font-size: 13.5px; line-height: 1.6; color: var(--text); background: #f0f6fc; }
+    body { margin: 0; background: #f0f6fc; }
+    @media print { html, body { background: var(--white); } }
+
+    .doc-wrap { max-width: 900px; margin: 28px auto; background: var(--white); border-radius: 12px; box-shadow: 0 20px 60px rgba(0,70,180,.10); overflow: hidden; }
+    @media print { .doc-wrap { max-width: none; margin: 0; border-radius: 0; box-shadow: none; } }
+
+    /* Cover */
+    .cover { background: linear-gradient(145deg, var(--dark-navy) 0%, var(--blue-dark) 45%, var(--mid-blue) 80%, var(--primary) 100%); color: var(--white); padding: 72px 62px 60px; min-height: 297mm; display: flex; flex-direction: column; justify-content: space-between; page-break-after: always; }
+    .cover-logo { font-size: 15px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; opacity: .7; }
+    .cover-center { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 40px 0 20px; }
+    .cover-eyebrow { font-size: 13px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; opacity: .6; margin-bottom: 18px; }
+    .cover-tag { display: inline-block; padding: 5px 14px; border: 1.5px solid rgba(255,255,255,.5); border-radius: 6px; font-size: 12px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; margin-bottom: 22px; opacity: .9; }
+    .cover-title { font-size: 50px; font-weight: 900; line-height: 1.05; margin: 0 0 16px; letter-spacing: -.5px; }
+    .cover-subtitle { font-size: 20px; font-weight: 400; opacity: .75; margin: 0 0 36px; }
+    .cover-divider { width: 64px; height: 4px; background: var(--primary); border-radius: 2px; margin-bottom: 32px; }
+    .cover-desc { font-size: 14px; opacity: .8; max-width: 500px; line-height: 1.7; }
+    .cover-meta { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 36px; }
+    .cover-meta-item { border: 1px solid rgba(255,255,255,.2); border-radius: 8px; padding: 12px 16px; }
+    .cover-meta-label { font-size: 10px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; opacity: .55; margin-bottom: 4px; }
+    .cover-meta-value { font-size: 14px; font-weight: 700; }
+    .cover-footer { display: flex; justify-content: space-between; align-items: flex-end; opacity: .5; font-size: 12px; font-weight: 600; border-top: 1px solid rgba(255,255,255,.15); padding-top: 22px; }
+
+    /* Page */
+    .page { padding: 48px 62px; }
+    .page-break { page-break-before: always; }
+
+    /* Section header */
+    .sec-hdr { display: flex; align-items: flex-start; gap: 18px; margin-bottom: 28px; padding-bottom: 18px; border-bottom: 3px solid var(--primary); }
+    .sec-icon { width: 52px; height: 52px; border-radius: 14px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 24px; background: linear-gradient(135deg, var(--dark-navy), var(--blue-dark)); }
+    .sec-icon-blue { background: linear-gradient(135deg, var(--primary), var(--mid-blue)); }
+    .sec-icon-green { background: linear-gradient(135deg, #1e7e34, #28a745); }
+    .sec-num { font-size: 12px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--primary); margin-bottom: 4px; }
+    .sec-title { font-size: 26px; font-weight: 900; color: var(--dark-navy); margin: 0 0 6px; line-height: 1.15; }
+    .sec-desc { font-size: 13px; color: var(--muted); margin: 0; }
+
+    /* Typography */
+    h2 { font-size: 17px; font-weight: 800; color: var(--dark-navy); margin: 28px 0 10px; padding-bottom: 7px; border-bottom: 2px solid var(--light-bg); break-after: avoid; }
+    h3 { font-size: 14px; font-weight: 700; color: var(--blue-dark); margin: 18px 0 7px; break-after: avoid; }
+    p  { margin: 0 0 10px; }
+    ul, ol { margin: 0 0 12px 20px; padding: 0; }
+    li { margin: 3px 0; }
+    strong { color: var(--dark-navy); }
+    code { font-family: Consolas, monospace; font-size: .9em; padding: 2px 6px; border-radius: 4px; background: #e8f2fb; color: var(--blue-dark); }
+
+    /* Doc info */
+    .doc-info { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; border: 1.5px solid var(--border); border-radius: 10px; overflow: hidden; margin-bottom: 24px; break-inside: avoid; }
+    .doc-info-cell { padding: 12px 16px; background: var(--white); }
+    .doc-info-cell:nth-child(odd) { background: var(--light-bg); }
+    .doc-info-label { font-size: 10px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--primary); margin-bottom: 3px; }
+    .doc-info-value { font-size: 13px; font-weight: 700; color: var(--dark-navy); }
+
+    /* Scope tags */
+    .scope-grid { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0 18px; }
+    .scope-tag { display: flex; align-items: center; gap: 6px; padding: 6px 13px; border-radius: 100px; background: var(--light-bg); border: 1.5px solid var(--border); font-size: 12px; font-weight: 700; color: var(--blue-dark); }
+    .scope-tag::before { content: "✓"; color: var(--primary); font-weight: 900; }
+
+    /* Role cards */
+    .role-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 14px 0 20px; }
+    .role-card { border-radius: 10px; padding: 16px; break-inside: avoid; }
+    .rc-visitor { background: #f5f5f5; border: 2px solid #ddd; }
+    .rc-emp { background: var(--light-bg); border: 2px solid #a0d4f0; }
+    .rc-mgr { background: #fff8ee; border: 2px solid #f5c060; }
+    .rc-adm { background: #eef0fb; border: 2px solid #a8b4e8; }
+    .role-icon { font-size: 24px; margin-bottom: 7px; }
+    .role-name { font-weight: 900; font-size: 13px; color: var(--dark-navy); margin-bottom: 7px; }
+    .role-list { list-style: none; margin: 0; padding: 0; }
+    .role-list li { font-size: 11.5px; color: var(--muted); padding: 2px 0; }
+    .role-list li::before { content: "· "; color: var(--primary); font-weight: 900; }
+
+    /* FR cards */
+    .fr-group { margin: 18px 0 24px; }
+    .fr-group-title { font-size: 12px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--mid-blue); padding: 6px 12px; background: var(--light-bg); border-left: 4px solid var(--primary); border-radius: 0 6px 6px 0; margin-bottom: 12px; }
+    .fr-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .fr-card { border: 1.5px solid var(--border); border-radius: 10px; padding: 14px; background: var(--white); break-inside: avoid; }
+    .fr-header { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+    .fr-num { min-width: 48px; padding: 3px 8px; border-radius: 6px; background: var(--dark-navy); color: var(--white); font-size: 10.5px; font-weight: 800; letter-spacing: .06em; text-align: center; }
+    .fr-title { font-weight: 800; font-size: 13px; color: var(--dark-navy); }
+    .fr-list { list-style: none; margin: 0; padding: 0; }
+    .fr-list li { font-size: 11.5px; color: var(--muted); padding: 2px 0 2px 14px; position: relative; }
+    .fr-list li::before { content: "—"; position: absolute; left: 0; color: var(--primary); }
+
+    /* Tables */
+    table { width: 100%; border-collapse: collapse; margin: 12px 0 18px; font-size: 12.5px; break-inside: avoid; }
+    thead tr { background: var(--dark-navy); color: var(--white); }
+    thead th { padding: 10px 13px; text-align: left; font-weight: 700; font-size: 12px; }
+    tbody tr:nth-child(even) { background: var(--light-bg); }
+    tbody tr:nth-child(odd) { background: var(--white); }
+    tbody td { padding: 9px 13px; border-bottom: 1px solid #d4e9f7; vertical-align: top; }
+    .nfr-id { font-weight: 800; color: var(--blue-dark); white-space: nowrap; }
+
+    /* Entity grid */
+    .entity-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 12px 0 18px; }
+    .entity-card { background: var(--light-bg); border: 1.5px solid var(--border); border-radius: 8px; padding: 12px; break-inside: avoid; }
+    .entity-name { font-weight: 800; font-size: 12.5px; color: var(--dark-navy); margin-bottom: 4px; }
+    .entity-desc { font-size: 11.5px; color: var(--muted); margin: 0; }
+
+    /* Callout */
+    .callout { display: flex; gap: 13px; padding: 13px 16px; border-radius: 9px; margin: 12px 0; break-inside: avoid; }
+    .callout-icon { font-size: 18px; flex-shrink: 0; line-height: 1.3; }
+    .callout-title { font-weight: 800; font-size: 12.5px; margin-bottom: 2px; }
+    .callout-text  { font-size: 12px; margin: 0; }
+    .c-info { background: var(--light-bg); border-left: 4px solid var(--primary); }
+    .c-info .callout-title { color: var(--blue-dark); }
+    .c-info .callout-text  { color: #2a4a6e; }
+
+    /* Checklist */
+    .checklist { list-style: none; margin: 10px 0 16px; padding: 0; }
+    .checklist li { display: flex; align-items: flex-start; gap: 10px; padding: 9px 12px; margin-bottom: 5px; background: var(--light-bg); border-radius: 8px; border: 1.5px solid var(--border); font-size: 12.5px; break-inside: avoid; }
+    .checklist li::before { content: "✓"; color: #22c55e; font-weight: 900; font-size: 14px; flex-shrink: 0; line-height: 1.3; }
+
+    /* Interface cards */
+    .iface-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 12px 0 16px; }
+    .iface-card { border: 1.5px solid var(--border); border-radius: 9px; padding: 14px; background: var(--white); break-inside: avoid; }
+    .iface-icon { font-size: 22px; margin-bottom: 7px; }
+    .iface-title { font-weight: 800; font-size: 13px; color: var(--dark-navy); margin-bottom: 5px; }
+    .iface-text { font-size: 12px; color: var(--muted); margin: 0; }
+
+    hr.sep { border: none; border-top: 2px solid var(--light-bg); margin: 24px 0; }
+
+    .page-footer { margin-top: 44px; padding-top: 12px; border-top: 1.5px solid var(--border); display: flex; justify-content: space-between; font-size: 11px; color: #8ba8c4; font-weight: 600; }
+  </style>
+</head>
+<body>
+<div class="doc-wrap">
+
+<!-- COVER -->
+<div class="cover">
+  <div class="cover-logo">Chronis &nbsp;·&nbsp; Projekt Manufactory LAB</div>
+  <div class="cover-center">
+    <p class="cover-eyebrow">Dokumentace projektu</p>
+    <div class="cover-tag">SRS · v1.0</div>
+    <h1 class="cover-title">Software<br>Requirements<br>Specification</h1>
+    <p class="cover-subtitle">Specifikace softwarových požadavků</p>
+    <div class="cover-divider"></div>
+    <p class="cover-desc">Tento dokument definuje, co má aplikace Chronis poskytovat. Specifikuje funkční a nefunkční požadavky, cílové uživatele, datový model, rozhraní a akceptační kritéria pro úspěšné dokončení projektu.</p>
+    <div class="cover-meta">
+      <div class="cover-meta-item"><div class="cover-meta-label">Autor</div><div class="cover-meta-value">Lukáš Mareš</div></div>
+      <div class="cover-meta-item"><div class="cover-meta-label">Verze</div><div class="cover-meta-value">1.0</div></div>
+      <div class="cover-meta-item"><div class="cover-meta-label">Datum</div><div class="cover-meta-value">28. 5. 2026</div></div>
+    </div>
+  </div>
+  <div class="cover-footer">
+    <span>Chronis — Webová docházková a administrační aplikace</span>
+    <span>SRS · Software Requirements Specification</span>
+  </div>
+</div>
+
+<!-- SEKCE 1–3 -->
+<div class="page">
+  <div class="sec-hdr">
+    <div class="sec-icon sec-icon-blue">📋</div>
+    <div>
+      <div class="sec-num">Sekce 1–3</div>
+      <h1 class="sec-title">Identifikace, účel a rozsah</h1>
+      <p class="sec-desc">Základní informace o dokumentu, aplikaci a jejím rozsahu.</p>
+    </div>
+  </div>
+
+  <h2>1. Identifikace dokumentu</h2>
+  <div class="doc-info">
+    <div class="doc-info-cell"><div class="doc-info-label">Název projektu</div><div class="doc-info-value">Chronis</div></div>
+    <div class="doc-info-cell"><div class="doc-info-label">Typ systému</div><div class="doc-info-value">Webová docházková a administrační aplikace</div></div>
+    <div class="doc-info-cell"><div class="doc-info-label">Autor projektu</div><div class="doc-info-value">Lukáš Mareš</div></div>
+    <div class="doc-info-cell"><div class="doc-info-label">Verze dokumentu</div><div class="doc-info-value">1.0</div></div>
+    <div class="doc-info-cell"><div class="doc-info-label">Datum</div><div class="doc-info-value">28. 5. 2026</div></div>
+    <div class="doc-info-cell"><div class="doc-info-label">Navazující dokument</div><div class="doc-info-value">SDD — Software Design Document</div></div>
+  </div>
+
+  <h2>2. Účel dokumentu</h2>
+  <p>Tento dokument popisuje softwarové požadavky aplikace Chronis. Slouží jako specifikace toho, co má aplikace poskytovat z pohledu uživatelů, administrátorů a vedoucích pracovníků. Definuje účel systému, cílové uživatele, hlavní funkce, nefunkční požadavky, datové požadavky, omezení a akceptační kritéria.</p>
+
+  <h2>3. Účel a rozsah aplikace</h2>
+  <p>Chronis je webová aplikace pro evidenci docházky zaměstnanců, správu firem, uživatelů, absencí, reportů a interní komunikace. Systém je určen pro firmy, které chtějí nahradit papírovou nebo tabulkovou evidenci docházky přehlednou online aplikací.</p>
+  <p>Zaměstnanci zaznamenávají příchod, odchod, pauzu a odchod mimo pracoviště. Vedoucí spravují tým a schvalují žádosti. Administrátor má plnou správu systému.</p>
+
+  <h3>Součásti systému</h3>
+  <div class="scope-grid">
+    <span class="scope-tag">Veřejná prezentační část</span>
+    <span class="scope-tag">Přihlášení a autentizace</span>
+    <span class="scope-tag">Tři uživatelské role</span>
+    <span class="scope-tag">Zaměstnanecký dashboard</span>
+    <span class="scope-tag">Dashboard vedoucího</span>
+    <span class="scope-tag">Administrátorský dashboard</span>
+    <span class="scope-tag">Evidence docházky</span>
+    <span class="scope-tag">Historie docházky</span>
+    <span class="scope-tag">Správa žádostí o absenci</span>
+    <span class="scope-tag">Schvalování absencí</span>
+    <span class="scope-tag">Správa firem</span>
+    <span class="scope-tag">Správa uživatelů</span>
+    <span class="scope-tag">Výchozí směny</span>
+    <span class="scope-tag">Docházkové reporty</span>
+    <span class="scope-tag">Exporty CSV a XLSX</span>
+    <span class="scope-tag">Systém zpráv</span>
+    <span class="scope-tag">Nastavení systému</span>
+    <span class="scope-tag">Nápověda</span>
+    <span class="scope-tag">Reset hesla přes e-mail</span>
+    <span class="scope-tag">Fotografie zaměstnanců</span>
+    <span class="scope-tag">Chybové stránky</span>
+  </div>
+
+  <div class="page-footer">
+    <span>Chronis — SRS · Software Requirements Specification</span>
+    <span>Sekce 1–3 · Identifikace a rozsah</span>
+  </div>
+</div>
+
+<!-- SEKCE 4 — UŽIVATELÉ -->
+<div class="page page-break">
+  <div class="sec-hdr">
+    <div class="sec-icon">👥</div>
+    <div>
+      <div class="sec-num">Sekce 4</div>
+      <h1 class="sec-title">Cíloví uživatelé</h1>
+      <p class="sec-desc">Přehled rolí a jejich oprávnění v systému Chronis.</p>
+    </div>
+  </div>
+
+  <div class="role-grid">
+    <div class="role-card rc-visitor">
+      <div class="role-icon">🌐</div>
+      <p class="role-name">Nepřihlášený návštěvník</p>
+      <ul class="role-list">
+        <li>Hlavní stránka</li>
+        <li>Stránka O nás</li>
+        <li>Kontakty a formulář</li>
+        <li>Přihlašovací stránka</li>
+      </ul>
+    </div>
+    <div class="role-card rc-emp">
+      <div class="role-icon">👤</div>
+      <p class="role-name">Zaměstnanec</p>
+      <ul class="role-list">
+        <li>Vlastní dashboard</li>
+        <li>Evidence docházky</li>
+        <li>Žádost o absenci</li>
+        <li>Přehled žádostí</li>
+        <li>Historie docházky</li>
+        <li>Zprávy a nápověda</li>
+      </ul>
+    </div>
+    <div class="role-card rc-mgr">
+      <div class="role-icon">👔</div>
+      <p class="role-name">Vedoucí směny</p>
+      <ul class="role-list">
+        <li>Vše jako zaměstnanec</li>
+        <li>Správa uživatelů firmy</li>
+        <li>Schvalování absencí</li>
+        <li>Docházkové reporty</li>
+        <li>Exporty dat firmy</li>
+      </ul>
+    </div>
+    <div class="role-card rc-adm">
+      <div class="role-icon">🛡️</div>
+      <p class="role-name">Administrátor</p>
+      <ul class="role-list">
+        <li>Správa všech firem</li>
+        <li>Správa všech uživatelů</li>
+        <li>Nastavení dovolené firmy</li>
+        <li>Schvalování absencí</li>
+        <li>Reporty a exporty</li>
+        <li>Systémová nastavení</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="callout c-info">
+    <div class="callout-icon">ℹ️</div>
+    <div>
+      <p class="callout-title">Omezení vedoucího směny</p>
+      <p class="callout-text">Vedoucí směny pracuje výhradně s daty <strong>své firmy</strong>. Nemá přístup ke správě jiných firem, globálnímu nastavení systému ani k datům zaměstnanců jiných firem.</p>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span>Chronis — SRS · Software Requirements Specification</span>
+    <span>Sekce 4 · Cíloví uživatelé</span>
+  </div>
+</div>
+
+<!-- SEKCE 5 — FR část 1 -->
+<div class="page page-break">
+  <div class="sec-hdr">
+    <div class="sec-icon sec-icon-blue">⚙️</div>
+    <div>
+      <div class="sec-num">Sekce 5 · 1/2</div>
+      <h1 class="sec-title">Funkční požadavky</h1>
+      <p class="sec-desc">FR-01 až FR-14 — Přístup, autentizace, dashboardy, docházka a absence.</p>
+    </div>
+  </div>
+
+  <div class="fr-group">
+    <div class="fr-group-title">Přístup a autentizace &nbsp;·&nbsp; FR-01 – FR-04</div>
+    <div class="fr-grid">
+      <div class="fr-card">
+        <div class="fr-header"><span class="fr-num">FR-01</span><span class="fr-title">Veřejná část aplikace</span></div>
+        <ul class="fr-list">
+          <li>Informace o aplikaci, stránka O nás</li>
+          <li>Kontakty s formulářem a mapou</li>
+          <li>Tlačítko pro přechod na přihlášení</li>
+        </ul>
+      </div>
+      <div class="fr-card">
+        <div class="fr-header"><span class="fr-num">FR-02</span><span class="fr-title">Přihlášení uživatele</span></div>
+        <ul class="fr-list">
+          <li>Přihlášení pomocí jména a hesla</li>
+          <li>Vytvoření session, rozpoznání role</li>
+          <li>Přesměrování do systému po přihlášení</li>
+          <li>Chybová hláška při neplatných údajích</li>
+        </ul>
+      </div>
+      <div class="fr-card">
+        <div class="fr-header"><span class="fr-num">FR-03</span><span class="fr-title">Ochrana interních stránek</span></div>
+        <ul class="fr-list">
+          <li>Nepřihlášený → přesměrování na login</li>
+          <li>Bez oprávnění → stránka „Nemáte přístup"</li>
+          <li>Neexistující URL → stránka 404</li>
+        </ul>
+      </div>
+      <div class="fr-card">
+        <div class="fr-header"><span class="fr-num">FR-04</span><span class="fr-title">Role a oprávnění</span></div>
+        <ul class="fr-list">
+          <li>Role: administrátor, vedoucí, zaměstnanec</li>
+          <li>Různý sidebar a dashboard dle role</li>
+          <li>Kontrola přístupu na úrovni stránky i API</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="fr-group">
+    <div class="fr-group-title">Dashboardy &nbsp;·&nbsp; FR-05 – FR-07</div>
+    <div class="fr-grid">
+      <div class="fr-card">
+        <div class="fr-header"><span class="fr-num">FR-05</span><span class="fr-title">Dashboard zaměstnance</span></div>
+        <ul class="fr-list">
+          <li>Dnešní stav docházky</li>
+          <li>Odpracovaný čas dnes a v měsíci</li>
+          <li>Počet vlastních žádostí, dnešní směna</li>
+          <li>Rychlé akce</li>
+        </ul>
+      </div>
+      <div class="fr-card">
+        <div class="fr-header"><span class="fr-num">FR-06</span><span class="fr-title">Dashboard vedoucího</span></div>
+        <ul class="fr-list">
+          <li>Počet spravovaných uživatelů</li>
+          <li>Počet čekajících a vyřízených žádostí</li>
+          <li>Rychlé odkazy na klíčové sekce</li>
+        </ul>
+      </div>
+      <div class="fr-card">
+        <div class="fr-header"><span class="fr-num">FR-07</span><span class="fr-title">Dashboard administrátora</span></div>
+        <ul class="fr-list">
+          <li>Počet firem v systému</li>
+          <li>Info o přihlášeném uživateli a roli</li>
+          <li>Rychlé akce, přehled posledních firem</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="fr-group">
+    <div class="fr-group-title">Evidence docházky &nbsp;·&nbsp; FR-08 – FR-11</div>
+    <div class="fr-grid">
+      <div class="fr-card">
+        <div class="fr-header"><span class="fr-num">FR-08</span><span class="fr-title">Evidence docházky</span></div>
+        <ul class="fr-list">
+          <li>Příchod, pauza, mimo pracoviště, ukončení směny</li>
+          <li>Systém brání neplatným posloupnostem akcí</li>
+          <li>Nelze ukončit v pauze ani mimo pracoviště</li>
+        </ul>
+      </div>
+      <div class="fr-card">
+        <div class="fr-header"><span class="fr-num">FR-09</span><span class="fr-title">Výpočet odpracovaného času</span></div>
+        <ul class="fr-list">
+          <li>Odpracováno = příchod→odchod − pauza − mimo pracoviště</li>
+          <li>Odchod mimo pracoviště nezavírá pracovní den</li>
+        </ul>
+      </div>
+      <div class="fr-card">
+        <div class="fr-header"><span class="fr-num">FR-10</span><span class="fr-title">Směny</span></div>
+        <ul class="fr-list">
+          <li>Název, čas od/do, tolerance, plánované minuty</li>
+          <li>Každý zaměstnanec má přiřazenou výchozí směnu</li>
+          <li>Ranní, odpolední, noční, zkrácená směna</li>
+          <li>Vyhodnocení pozdního příchodu dle tolerance</li>
+        </ul>
+      </div>
+      <div class="fr-card">
+        <div class="fr-header"><span class="fr-num">FR-11</span><span class="fr-title">Historie docházky</span></div>
+        <ul class="fr-list">
+          <li>Měsíční přehled a filtr období</li>
+          <li>Příchod, odchod, pauza, mimo pracoviště, odpracováno</li>
+          <li>Stav dne a souhrn za celé období</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="fr-group">
+    <div class="fr-group-title">Správa absencí &nbsp;·&nbsp; FR-12 – FR-14</div>
+    <div class="fr-grid">
+      <div class="fr-card">
+        <div class="fr-header"><span class="fr-num">FR-12</span><span class="fr-title">Žádost o absenci</span></div>
+        <ul class="fr-list">
+          <li>Typ, datum od/do, volitelně čas od/do, poznámka</li>
+          <li>Kontrola povinných polí a pořadí dat/časů</li>
+          <li>Kontrola překryvu a ročního nároku dovolené</li>
+        </ul>
+      </div>
+      <div class="fr-card">
+        <div class="fr-header"><span class="fr-num">FR-13</span><span class="fr-title">Moje žádosti</span></div>
+        <ul class="fr-list">
+          <li>Přehled žádostí a jejich stavů (čeká / schváleno / zamítnuto)</li>
+          <li>Typ, termín, počet dní, poznámka, info o rozhodnutí</li>
+        </ul>
+      </div>
+      <div class="fr-card">
+        <div class="fr-header"><span class="fr-num">FR-14</span><span class="fr-title">Schvalování absencí</span></div>
+        <ul class="fr-list">
+          <li>Přehled žádostí a kalendář absencí</li>
+          <li>Detail žádosti, poznámka, schválit / zamítnout</li>
+          <li>Vedoucí vidí jen žádosti své firmy</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span>Chronis — SRS · Software Requirements Specification</span>
+    <span>Sekce 5 · Funkční požadavky FR-01–FR-14</span>
+  </div>
+</div>
+
+<!-- SEKCE 5 — FR část 2 -->
+<div class="page page-break">
+  <div class="sec-hdr">
+    <div class="sec-icon sec-icon-blue">⚙️</div>
+    <div>
+      <div class="sec-num">Sekce 5 · 2/2</div>
+      <h1 class="sec-title">Funkční požadavky (pokračování)</h1>
+      <p class="sec-desc">FR-15 až FR-24 — Správa dat, systémové funkce a komunikace.</p>
+    </div>
+  </div>
+
+  <div class="fr-group">
+    <div class="fr-group-title">Správa dat &nbsp;·&nbsp; FR-15 – FR-17</div>
+    <div class="fr-grid">
+      <div class="fr-card">
+        <div class="fr-header"><span class="fr-num">FR-15</span><span class="fr-title">Správa firem</span></div>
+        <ul class="fr-list">
+          <li>Název, IČO, e-mail, telefon, adresa, logo</li>
+          <li>Roční nárok dovolené: 20–40 dní (individuálně)</li>
+          <li>Vytvoření, úprava, smazání firmy</li>
+        </ul>
+      </div>
+      <div class="fr-card">
+        <div class="fr-header"><span class="fr-num">FR-16</span><span class="fr-title">Správa uživatelů</span></div>
+        <ul class="fr-list">
+          <li>Jméno, e-mail, telefon, foto, čip, mzda, nástup</li>
+          <li>Role, oddělení, výchozí směna, login, aktivní stav</li>
+          <li>Vedoucí: jen uživatelé své firmy, nelze tvořit adminy</li>
+        </ul>
+      </div>
+      <div class="fr-card">
+        <div class="fr-header"><span class="fr-num">FR-17</span><span class="fr-title">Fotografie zaměstnanců</span></div>
+        <ul class="fr-list">
+          <li>Nahrání fotky v editaci uživatele</li>
+          <li>Uložení na filesystem, cesta v databázi</li>
+          <li>Bez fotky → zobrazení iniciál zaměstnance</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="fr-group">
+    <div class="fr-group-title">Systémové funkce &nbsp;·&nbsp; FR-18 – FR-24</div>
+    <div class="fr-grid">
+      <div class="fr-card">
+        <div class="fr-header"><span class="fr-num">FR-18</span><span class="fr-title">Reset hesla přes e-mail</span></div>
+        <ul class="fr-list">
+          <li>Odkaz s jednorázovým tokenem zaslaný e-mailem</li>
+          <li>Token je časově omezený a po použití zneplatněn</li>
+          <li>Heslo se nikdy neposílá v čitelné podobě</li>
+        </ul>
+      </div>
+      <div class="fr-card">
+        <div class="fr-header"><span class="fr-num">FR-19</span><span class="fr-title">Zprávy a notifikace</span></div>
+        <ul class="fr-list">
+          <li>Systémové notifikace a interní zprávy</li>
+          <li>Výběr příjemce, odpověď, potvrzení odeslání</li>
+        </ul>
+      </div>
+      <div class="fr-card">
+        <div class="fr-header"><span class="fr-num">FR-20</span><span class="fr-title">Docházkové reporty</span></div>
+        <ul class="fr-list">
+          <li>Filtr: období, firma (admin), oddělení (vedoucí)</li>
+          <li>Hodiny, absence, pozdní příchody, přesčasy</li>
+          <li>Přehled dle zaměstnanců, oddělení, týdenní graf</li>
+        </ul>
+      </div>
+      <div class="fr-card">
+        <div class="fr-header"><span class="fr-num">FR-21</span><span class="fr-title">Exporty</span></div>
+        <ul class="fr-list">
+          <li>Formáty: CSV a XLSX</li>
+          <li>Data: docházka, absence, mzdy, uživatelé, firmy</li>
+          <li>Vedoucí: pouze data své firmy</li>
+        </ul>
+      </div>
+      <div class="fr-card">
+        <div class="fr-header"><span class="fr-num">FR-22</span><span class="fr-title">Nastavení systému</span></div>
+        <ul class="fr-list">
+          <li>Název systému, hlavní e-mail</li>
+          <li>Záložní čas začátku a konce směny</li>
+          <li>Notifikační volby</li>
+        </ul>
+      </div>
+      <div class="fr-card">
+        <div class="fr-header"><span class="fr-num">FR-23</span><span class="fr-title">Nápověda</span></div>
+        <ul class="fr-list">
+          <li>Dostupná všem přihlášeným uživatelům</li>
+          <li>Časté otázky a rychlé návody</li>
+        </ul>
+      </div>
+      <div class="fr-card">
+        <div class="fr-header"><span class="fr-num">FR-24</span><span class="fr-title">Kontaktní formulář</span></div>
+        <ul class="fr-list">
+          <li>Dostupný na veřejné stránce Kontakty</li>
+          <li>Pole: jméno, firma, e-mail, zpráva</li>
+          <li>Odeslání přes SMTP / PHPMailer</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span>Chronis — SRS · Software Requirements Specification</span>
+    <span>Sekce 5 · Funkční požadavky FR-15–FR-24</span>
+  </div>
+</div>
+
+<!-- SEKCE 6 — NFR -->
+<div class="page page-break">
+  <div class="sec-hdr">
+    <div class="sec-icon">📐</div>
+    <div>
+      <div class="sec-num">Sekce 6</div>
+      <h1 class="sec-title">Nefunkční požadavky</h1>
+      <p class="sec-desc">Požadavky na kvalitu, bezpečnost, výkon a provozní vlastnosti systému.</p>
+    </div>
+  </div>
+
+  <table>
+    <thead><tr><th style="width:88px">ID</th><th style="width:115px">Oblast</th><th>Požadavek</th></tr></thead>
+    <tbody>
+      <tr><td><span class="nfr-id">NFR-01</span></td><td>Použitelnost</td><td>Aplikace musí být přehledná a použitelná pro běžného zaměstnance bez technických znalostí.</td></tr>
+      <tr><td><span class="nfr-id">NFR-02</span></td><td>Responzivita</td><td>Aplikace musí být použitelná na počítači a notebooku. Vybrané obrazovky musí být rozumně použitelné i na menších šířkách.</td></tr>
+      <tr><td><span class="nfr-id">NFR-03</span></td><td>Bezpečnost</td><td>Hesla ukládána jako hash (<code>password_hash</code>). Session ověřována u chráněných endpointů. Kontrola oprávnění podle role. Vedoucí nemá přístup k cizím firmám. Jednorázové tokeny pro reset hesla.</td></tr>
+      <tr><td><span class="nfr-id">NFR-04</span></td><td>Integrita dat</td><td>Validace vstupů na frontendu i backendu. Backend kontroluje: povinná pole, platnost datumů, platnost rolí, rozsah dovolené, existenci směny, oprávnění nad oddělením a firmou.</td></tr>
+      <tr><td><span class="nfr-id">NFR-05</span></td><td>Výkon</td><td>Stránky načítají data přes JSON endpointy a zobrazují přehledy bez zbytečného prodlení.</td></tr>
+      <tr><td><span class="nfr-id">NFR-06</span></td><td>Udržovatelnost</td><td>Kód rozdělen na: frontend stránky, komponenty, layouty, backend endpointy, pomocné funkce, DB migrace. Novější backend části přesouvány do <code>src/Support</code>, <code>src/Repositories</code>, <code>src/Services</code>.</td></tr>
+      <tr><td><span class="nfr-id">NFR-07</span></td><td>Kompatibilita</td><td>Frontend přes Vite, backend přes WAMP/PHP, databáze MySQL. Primárně pro lokální vývojové prostředí.</td></tr>
+      <tr><td><span class="nfr-id">NFR-08</span></td><td>Dostupnost</td><td>Lokální školní prostředí. Dostupnost zajištěna během prezentace. Produkční vysoká dostupnost není součástí rozsahu.</td></tr>
+      <tr><td><span class="nfr-id">NFR-09</span></td><td>Zálohování</td><td>Automatické zálohování není implementováno. Pro odevzdání je přiložen SQL export nebo migrační skripty.</td></tr>
+      <tr><td><span class="nfr-id">NFR-10</span></td><td>Lokalizace</td><td>Uživatelské rozhraní je výhradně v českém jazyce.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="page-footer">
+    <span>Chronis — SRS · Software Requirements Specification</span>
+    <span>Sekce 6 · Nefunkční požadavky</span>
+  </div>
+</div>
+
+<!-- SEKCE 7–11 -->
+<div class="page page-break">
+  <div class="sec-hdr">
+    <div class="sec-icon sec-icon-green">✅</div>
+    <div>
+      <div class="sec-num">Sekce 7–11</div>
+      <h1 class="sec-title">Data, rozhraní, omezení a akceptační kritéria</h1>
+      <p class="sec-desc">Datový model, externí rozhraní, provozní omezení a podmínky akceptace.</p>
+    </div>
+  </div>
+
+  <h2>7. Datové požadavky</h2>
+  <div class="entity-grid">
+    <div class="entity-card"><p class="entity-name">Zaměstnanec</p><p class="entity-desc">Uživatelský účet, role, foto, směna, oddělení, firma.</p></div>
+    <div class="entity-card"><p class="entity-name">Firma</p><p class="entity-desc">Název, IČO, adresa, logo, nárok dovolené.</p></div>
+    <div class="entity-card"><p class="entity-name">Oddělení</p><p class="entity-desc">Název, vazba na firmu.</p></div>
+    <div class="entity-card"><p class="entity-name">Docházkový den</p><p class="entity-desc">Datum, příchod, odchod, pauza, mimo pracoviště, stav.</p></div>
+    <div class="entity-card"><p class="entity-name">Docházková událost</p><p class="entity-desc">Typ akce (příchod, pauza…), čas, zaměstnanec.</p></div>
+    <div class="entity-card"><p class="entity-name">Žádost o absenci</p><p class="entity-desc">Typ, datum od/do, stav, poznámka, schvalující.</p></div>
+    <div class="entity-card"><p class="entity-name">Směna</p><p class="entity-desc">Název, čas od/do, tolerance, úvazek, aktivní stav.</p></div>
+    <div class="entity-card"><p class="entity-name">Plán směn</p><p class="entity-desc">Konkrétní směna pro zaměstnance a datum (rozšíření).</p></div>
+    <div class="entity-card"><p class="entity-name">Systémové nastavení</p><p class="entity-desc">Globální parametry systému (klíč–hodnota).</p></div>
+    <div class="entity-card"><p class="entity-name">Token hesla</p><p class="entity-desc">SHA-256 hash, platnost, stav použití.</p></div>
+    <div class="entity-card"><p class="entity-name">Zpráva</p><p class="entity-desc">Odesílatel, příjemce, text, typ (systém/interní).</p></div>
+    <div class="entity-card"><p class="entity-name">Adresa / Pošta</p><p class="entity-desc">Adresní údaje firem.</p></div>
+  </div>
+
+  <hr class="sep">
+
+  <h2>8. Externí rozhraní</h2>
+  <div class="iface-grid">
+    <div class="iface-card">
+      <div class="iface-icon">🖥️</div>
+      <p class="iface-title">Uživatelské rozhraní</p>
+      <p class="iface-text">React SPA. Router bez plného reloadu. Tailwind CSS. Lucide React ikony.</p>
+    </div>
+    <div class="iface-card">
+      <div class="iface-icon">🔌</div>
+      <p class="iface-title">Backend API</p>
+      <p class="iface-text">PHP endpointy na <code>localhost/api/...</code>. Komunikace přes JSON. Session autentizace.</p>
+    </div>
+    <div class="iface-card">
+      <div class="iface-icon">📧</div>
+      <p class="iface-title">Emailové rozhraní</p>
+      <p class="iface-text">PHPMailer + SMTP. Kontaktní formulář a odkaz pro nastavení hesla.</p>
+    </div>
+  </div>
+
+  <hr class="sep">
+
+  <h2>9 &amp; 10. Omezení</h2>
+  <ul>
+    <li>Aplikace je primárně určena pro školní projekt a lokální běh.</li>
+    <li>Backend je řešen pomocí PHP endpointů bez plnohodnotného frameworku.</li>
+    <li>Některé části jsou připraveny pro budoucí rozšíření (detailní plánování směn).</li>
+    <li>Produkční provoz by vyžadoval HTTPS, lepší konfiguraci prostředí a automatické zálohy.</li>
+  </ul>
+
+  <hr class="sep">
+
+  <h2>11. Akceptační kritéria</h2>
+  <p>Projekt lze považovat za splněný, pokud jsou splněny všechny následující podmínky:</p>
+  <ul class="checklist">
+    <li>Uživatel se může přihlásit pomocí přihlašovacího jména a hesla.</li>
+    <li>Role uživatele ovlivňuje přístup ke stránkám a dostupné funkce.</li>
+    <li>Zaměstnanec může evidovat příchod, pauzu, odchod mimo pracoviště a ukončení směny.</li>
+    <li>Zaměstnanec může podat žádost o absenci s validací vstupů a limitu dovolené.</li>
+    <li>Administrátor nebo vedoucí může žádost schválit nebo zamítnout.</li>
+    <li>Administrátor může spravovat firmy (vytvoření, úprava, smazání, nastavení dovolené).</li>
+    <li>Administrátor nebo vedoucí může spravovat uživatele (vytvoření, úprava, foto, deaktivace).</li>
+    <li>Systém zobrazí historii docházky s výpočtem odpracovaného času.</li>
+    <li>Systém zobrazí docházkové reporty s filtry a souhrnnou statistikou.</li>
+    <li>Systém vygeneruje export dat ve formátu CSV nebo XLSX.</li>
+    <li>Systém odešle odkaz pro nastavení hesla přes e-mail.</li>
+    <li>Aplikace obsahuje nápovědu a chybové stránky (403, 404).</li>
+    <li>Zdrojové kódy a dokumentace jsou dostupné v repozitáři na GitHubu.</li>
+  </ul>
+
+  <div class="page-footer">
+    <span>Chronis — SRS · Software Requirements Specification</span>
+    <span>Sekce 7–11 · Data, rozhraní, omezení, kritéria</span>
+  </div>
+</div>
+
+</div>
+</body>
+</html>

@@ -2,11 +2,11 @@
 require_once "connection.php";
 session_start();
 
-header("Content-Type: application/json");
+header("Content-Type: application/json; charset=utf-8");
 header("Access-Control-Allow-Origin: http://localhost:5173");
 header("Access-Control-Allow-Methods: POST, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type");
-header("Access-Control-Allow-Credentials: true"); // ✅ NUTNÉ PRO SESSION COOKIE
+header("Access-Control-Allow-Credentials: true");
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
@@ -28,28 +28,29 @@ try {
     $stmt->execute();
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-if ($user && password_verify($heslo, $user["heslo"])) {
-    // Zjistíme, jestli je uživatel admin
-    $isAdmin = ($user["id_pozice"] == 1);  // nastav si správnou hodnotu pro admina
+    if ($user && password_verify($heslo, $user["heslo"])) {
+        $isAdmin = ($user["id_pozice"] == 1);
+        $isManager = ($user["id_pozice"] == 2);
 
-    // Uložení dat uživatele do session
-$_SESSION['user'] = [
-    "id" => $user["id_zamestnanec"],
-    "jmeno" => $user["jmeno"],
-    "prijmeni" => $user["prijmeni"],
-    "prihlasovaci_jmeno" => $user["prihlasovaci_jmeno"], // přidat
-    "pozice" => $user["id_pozice"],
-    "isAdmin" => $isAdmin
-];
+        $_SESSION['user'] = [
+            "id" => $user["id_zamestnanec"],
+            "jmeno" => $user["jmeno"],
+            "prijmeni" => $user["prijmeni"],
+            "prihlasovaci_jmeno" => $user["prihlasovaci_jmeno"],
+            "pozice" => $user["id_pozice"],
+            "isAdmin" => $isAdmin,
+            "isManager" => $isManager
+        ];
 
-    echo json_encode([
-        "success" => true,
-        "user" => $_SESSION['user'],
-        "isAdmin" => $isAdmin  // můžeš poslat i zvlášť, pokud chceš
-    ]);
-} else {
-    echo json_encode(["success" => false, "message" => "Neplatné přihlašovací údaje."]);
-}
+        echo json_encode([
+            "success" => true,
+            "user" => $_SESSION['user'],
+            "isAdmin" => $isAdmin,
+            "isManager" => $isManager
+        ]);
+    } else {
+        echo json_encode(["success" => false, "message" => "Neplatné přihlašovací údaje."]);
+    }
 } catch (PDOException $e) {
     echo json_encode(["success" => false, "message" => "Chyba serveru: " . $e->getMessage()]);
 }

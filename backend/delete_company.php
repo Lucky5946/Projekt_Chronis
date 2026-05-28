@@ -1,8 +1,7 @@
 <?php
 session_start();
-require_once "connection.php";
 
-header("Content-Type: application/json");
+header("Content-Type: application/json; charset=utf-8");
 header("Access-Control-Allow-Origin: http://localhost:5173");
 header("Access-Control-Allow-Methods: DELETE, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type");
@@ -13,46 +12,56 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
-// Ověření, že uživatel je admin (podle session)
+require_once "connection.php";
+
 if (!isset($_SESSION['user']) || $_SESSION['user']['isAdmin'] !== true) {
     http_response_code(403);
-    echo json_encode(["success" => false, "message" => "Přístup odepřen"]);
+    echo json_encode(["success" => false, "message" => "Přístup odepřen."]);
     exit();
 }
 
-// Získání ID firmy z query parametru
 if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
     http_response_code(400);
-    echo json_encode(["success" => false, "message" => "Neplatné ID firmy"]);
+    echo json_encode(["success" => false, "message" => "Neplatné ID firmy."]);
     exit();
 }
 
 $companyId = (int)$_GET['id'];
 
 try {
-    // Nejprve zjistíme id_adresa firmy
+    $conn->beginTransaction();
+
     $stmt = $conn->prepare("SELECT id_adresa FROM firmy WHERE id_firma = :id LIMIT 1");
-    $stmt->bindParam(":id", $companyId, PDO::PARAM_INT);
-    $stmt->execute();
+    $stmt->execute([":id" => $companyId]);
     $firma = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    if ($firma && $firma['id_adresa']) {
-        $idAdresy = $firma['id_adresa'];
-
-        // Smažeme adresu podle id_adresa
-        $stmt = $conn->prepare("DELETE FROM adresy WHERE id_adresa = :id_adresa");
-        $stmt->bindParam(":id_adresa", $idAdresy, PDO::PARAM_INT);
-        $stmt->execute();
+    if (!$firma) {
+        throw new RuntimeException("Firma nebyla nalezena.");
     }
 
-    // Nakonec smažeme firmu
-    $stmt = $conn->prepare("DELETE FROM firmy WHERE id_firma = :id");
-    $stmt->bindParam(":id", $companyId, PDO::PARAM_INT);
-    $stmt->execute();
+    $deleteCompany = $conn->prepare("DELETE FROM firmy WHERE id_firma = :id");
+    $deleteCompany->execute([":id" => $companyId]);
 
-    echo json_encode(["success" => true, "message" => "Firma a její adresa byly smazány"]);
+    if (!empty($firma['id_adresa'])) {
+        $deleteAddress = $conn->prepare("DELETE FROM adresy WHERE id_adresa = :idAdresa");
+        $deleteAddress->execute([":idAdresa" => (int)$firma['id_adresa']]);
+    }
+
+    $conn->commit();
+
+    echo json_encode(["success" => true, "message" => "Firma byla smazána."]);
+} catch (RuntimeException $e) {
+    if ($conn->inTransaction()) {
+        $conn->rollBack();
+    }
+
+    http_response_code(404);
+    echo json_encode(["success" => false, "message" => $e->getMessage()]);
 } catch (PDOException $e) {
+    if ($conn->inTransaction()) {
+        $conn->rollBack();
+    }
+
     http_response_code(500);
     echo json_encode(["success" => false, "message" => "Chyba serveru: " . $e->getMessage()]);
 }
-

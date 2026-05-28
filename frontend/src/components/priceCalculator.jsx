@@ -85,8 +85,8 @@ const monthlyPrice = users * pricePerUser;
 
         {/* Pravá část */}
         <div className="w-full md:w-1/2 p-8 flex flex-col items-center justify-center text-center">
-          <img src={mobileImage} alt="App preview" className="w-32 mb-4" />
-          <p className="text-xl font-bold">{monthlyPrice} Kč / Měsíc</p>
+          <img src={mobileImage} alt="Náhled aplikace" className="w-32 mb-4" />
+          <p className="text-xl font-bold">{monthlyPrice} Kč / měsíc</p>
           <p className="text-sm text-gray-500 mb-4">Prvních 14 dní zdarma</p>
           <button
             onClick={() => {
